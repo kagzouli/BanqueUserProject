@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
 
@@ -72,6 +73,9 @@ public class UserRESTTest {
 	private static final String USERNAME = "administrator";
 
 	private static final String PASSWORD = "adMinisTrator35#";
+	
+	private static final String GET_REQUEST = "GET";
+	private static final String POST_REQUEST = "POST";
 
 
 	private MockMvc mockMvc;
@@ -102,7 +106,7 @@ public class UserRESTTest {
 	public void listAllUsers() {
 		try {
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_LIST_REST, new HashMap<>());
+			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_LIST_REST, new HashMap<>(), GET_REQUEST);
 
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
@@ -139,7 +143,7 @@ public class UserRESTTest {
 			Map<String, String> params = new HashMap<>();
 			params.put("userCode", IDENTIFIER_USER_TEST);
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_BYCODE_REST, params);
+			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_BYCODE_REST, params, GET_REQUEST);
 
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
@@ -160,7 +164,7 @@ public class UserRESTTest {
 			Map<String, String> params = new HashMap<>();
 			params.put("userCode", IDENTIFIER_USER_NOTEXISTS);
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_BYCODE_REST, params);
+			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_BYCODE_REST, params, GET_REQUEST);
 
 			assertNotNull(jsonResult);
 			this.testErrorOnJsonResult(jsonResult, USER_NOT_FOUND_EXCEPTION);
@@ -186,7 +190,7 @@ public class UserRESTTest {
 	public void testListAllRoles() {
 		try {
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(ROLES_LIST_REST, new HashMap<>());
+			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(ROLES_LIST_REST, new HashMap<>(), GET_REQUEST);
 
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
@@ -235,7 +239,7 @@ public class UserRESTTest {
 		userBean.setListRoles(listRoles);
 
 		try {
-			JsonResult jsonResult = this.retrieveJsonResultConsumes(INSERT_USER_REST, userBean);
+			JsonResult jsonResult = this.retrieveJsonResultConsumes(INSERT_USER_REST, userBean, POST_REQUEST);
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
 			assertTrue(jsonResult.getErrors() == null || jsonResult.getErrors().isEmpty());
@@ -267,7 +271,7 @@ public class UserRESTTest {
 		userBean.setListRoles(listRoles);
 
 		try {
-			this.testFunctionalErrorCode(INSERT_USER_REST, userBean, USER_ALREADY_EXISTS_EXCEPTION);
+			this.testFunctionalErrorCode(INSERT_USER_REST, userBean, USER_ALREADY_EXISTS_EXCEPTION, POST_REQUEST);
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(false);
@@ -317,7 +321,7 @@ public class UserRESTTest {
 			userBean.setListRoles(listRoles);
 
 			// Update the user
-			JsonResult jsonResult = this.retrieveJsonResultConsumes(UPDATE_USER_REST, userBean);
+			JsonResult jsonResult = this.retrieveJsonResultConsumes(UPDATE_USER_REST, userBean , POST_REQUEST);
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
 			assertTrue(jsonResult.getErrors() == null || jsonResult.getErrors().isEmpty());
@@ -354,7 +358,7 @@ public class UserRESTTest {
 			userBean.setListRoles(listRoles);
 
 			// Update the user
-			this.testFunctionalErrorCode(UPDATE_USER_REST, userBean, USER_NOT_FOUND_EXCEPTION);
+			this.testFunctionalErrorCode(UPDATE_USER_REST, userBean, USER_NOT_FOUND_EXCEPTION, POST_REQUEST);
 			assertTrue(true);
 			
 		} catch (Exception exception) {
@@ -381,7 +385,7 @@ public class UserRESTTest {
 		params.put("userCode", IDENTIFIER_USER_TEST);
 
 		try{
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(DELETE_USER_REST, params);
+			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(DELETE_USER_REST, params, POST_REQUEST);
 		
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
@@ -398,7 +402,7 @@ public class UserRESTTest {
 		params.put("userCode", IDENTIFIER_USER_NOTEXISTS);
 
 		try{
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(DELETE_USER_REST, params);
+			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(DELETE_USER_REST, params , POST_REQUEST);
 			this.testErrorOnJsonResult(jsonResult, USER_NOT_FOUND_EXCEPTION);
 			assertTrue(true);
 			
@@ -446,12 +450,22 @@ public class UserRESTTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected JsonResult retrieveJsonResultConsumes(final String urlToTest, final Object initialObject)
+	protected JsonResult retrieveJsonResultConsumes(final String urlToTest, final Object initialObject , final String typeRequest)
 			throws Exception {
 
 		final String json = mapper.writeValueAsString(initialObject);
 
-		final MvcResult mvcResult = mockMvc.perform(post(urlToTest).with(httpBasic(USERNAME,PASSWORD)).accept(MediaType.APPLICATION_JSON)
+		MockHttpServletRequestBuilder resultActions = null;
+		switch(typeRequest){
+			case GET_REQUEST:
+				resultActions = get(urlToTest);
+				break;
+			default:
+				resultActions = post(urlToTest);
+				break;
+		}
+		
+		final MvcResult mvcResult = mockMvc.perform(resultActions.with(httpBasic(USERNAME,PASSWORD)).accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON).content(json)).andReturn();
 
 		assertNotNull(mvcResult);
@@ -474,10 +488,21 @@ public class UserRESTTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected JsonResult retrieveJsonResultConsumesForm(final String urlToTest, final Map<String, String> params)
+	protected JsonResult retrieveJsonResultConsumesForm(final String urlToTest, final Map<String, String> params, final String typeRequest)
 			throws Exception {
 
-		MockHttpServletRequestBuilder requestBuilder = post(urlToTest).accept(MediaType.APPLICATION_JSON);
+		MockHttpServletRequestBuilder resultActions = null;
+		switch(typeRequest){
+		case GET_REQUEST:
+			resultActions = get(urlToTest);
+			break;
+		default:
+			resultActions = post(urlToTest);
+			break;
+		}
+
+		
+		MockHttpServletRequestBuilder requestBuilder = resultActions.accept(MediaType.APPLICATION_JSON);
 
 		if (params != null) {
 			for (Map.Entry<String, String> paramEntry : params.entrySet()) {
@@ -503,11 +528,12 @@ public class UserRESTTest {
 	 * @param urlToTest
 	 * @param initialObject
 	 * @param keyCodeError
+	 * @param requestType
 	 * @throws Exception
 	 */
 	protected void testFunctionalErrorCode(final String urlToTest, final Object initialObject,
-			final String keyCodeError) throws Exception {
-		final JsonResult jsonResult = this.retrieveJsonResultConsumes(urlToTest, initialObject);
+			final String keyCodeError, final String requestType) throws Exception {
+		final JsonResult jsonResult = this.retrieveJsonResultConsumes(urlToTest, initialObject , requestType);
 		this.testErrorOnJsonResult(jsonResult, keyCodeError);
 	}
 

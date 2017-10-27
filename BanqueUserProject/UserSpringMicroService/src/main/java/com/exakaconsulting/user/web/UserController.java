@@ -42,7 +42,7 @@ public class UserController {
 	@Qualifier(USER_SERVICE)
 	private IUserService userService;
 
-	@RequestMapping(value = "/users", method = { RequestMethod.POST, RequestMethod.GET })
+	@RequestMapping(value = "/users", method = { RequestMethod.GET })
 	public ModelAndView home() {
 		ModelAndView modelView = new ModelAndView("userViewsHome");
 
@@ -51,7 +51,7 @@ public class UserController {
 		return modelView;
 	}
 
-	@RequestMapping(value = USERS_LIST_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@RequestMapping(value = USERS_LIST_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator') OR hasRole('userbank')")
@@ -73,7 +73,7 @@ public class UserController {
 		return jsonResult;
 	}
 
-	@RequestMapping(value = USERS_BYCODE_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@RequestMapping(value = USERS_BYCODE_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator') OR hasRole('userbank')")
@@ -99,7 +99,7 @@ public class UserController {
 		return jsonResult;
 	}
 
-	@RequestMapping(value = ROLES_LIST_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@RequestMapping(value = ROLES_LIST_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator')")
@@ -121,7 +121,7 @@ public class UserController {
 		return jsonResult;
 	}
 
-	@RequestMapping(value = INSERT_USER_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@RequestMapping(value = INSERT_USER_REST, method = {  RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator')")
@@ -145,7 +145,7 @@ public class UserController {
 		return jsonResult;
 	}
 
-	@RequestMapping(value = UPDATE_USER_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@RequestMapping(value = UPDATE_USER_REST, method = { RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator')")
@@ -170,7 +170,7 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping(value = DELETE_USER_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@RequestMapping(value = DELETE_USER_REST, method = { RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator')")
