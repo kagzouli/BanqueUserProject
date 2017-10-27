@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class AccountOperationBean implements Serializable{
 
 	/**
@@ -11,14 +13,19 @@ public class AccountOperationBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 2068078747564402727L;
 	
+	@ApiModelProperty(value="The user identifier", required=true)
 	private String userIdentifier;
-	
+
+	@ApiModelProperty(value="The label of the operation", required=true)
 	private String label;
 	
+	@ApiModelProperty(value="The amount of the operation", required=true)	
 	private BigDecimal amount;
-	
+
+	@ApiModelProperty(value="The operation type (credit/debit)", required=true)	
 	private String operationType;
 	
+	@ApiModelProperty(value="The operation date", required=true)		
 	private Date operationDate;
 	
 	public AccountOperationBean(){

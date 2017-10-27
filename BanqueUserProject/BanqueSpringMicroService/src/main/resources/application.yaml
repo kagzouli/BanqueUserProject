@@ -13,19 +13,24 @@ spring:
 endpoints:
     jmx:
       domain: banqueMicroService
-
+ 
 server:
-    port: 14090
+    port: ${PORT:14090}
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:20000/eureka/
   instance:
+    securePort: 14090
+    securePortEnabled: true
+    nonSecurePortEnabled: false
     leaseRenewalIntervalInSeconds: 10
     metadataMap:
       instanceId: ${spring.application.name}:${spring.application.instance_id:${server.port}:${random.value}}
-
+    statusPageUrl: /banqueMicroService/info
+    healthCheckUrl: /banqueMicroService/health
+    homePageUrl: /banqueMicroService/
 
    
         

@@ -7,10 +7,10 @@ import static com.exakaconsulting.IConstantApplication.KEY_MAX_AMOUNT_EXCEPTION;
 import static com.exakaconsulting.IConstantApplication.LIST_OPERATION_REST;
 import static com.exakaconsulting.IConstantApplication.MAX_AMOUNT_AUTORIZED;
 import static com.exakaconsulting.IConstantApplication.NEGATIVE_BALANCE_AMOUNT_EXCEPTION;
-import static com.exakaconsulting.IConstantApplication.USER_NOT_FOUND_EXCEPTION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
@@ -67,6 +67,8 @@ public class BanqueRESTTest {
 	private static final String BANK_USER_COLLABORATOR = "collaborator";
 	private static final String BANK_PASSWORD_COLLABORATOR = "collaBoRator35#";
 
+	private static final String GET_REQUEST = "GET";
+	private static final String POST_REQUEST = "POST";
 	
 	private MockMvc mockMvc;
 
@@ -110,7 +112,7 @@ public class BanqueRESTTest {
 			accountOperationParam.setUserIdentifier(IDENTIFIER_USER_TEST);
 			accountOperationParam.setBeginDate(DateUtils.fixDate(2016, 12, 17, 0, 0, 0, 0));
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumes(LIST_OPERATION_REST, accountOperationParam);
+			final JsonResult jsonResult = this.retrieveJsonResultConsumes(LIST_OPERATION_REST, accountOperationParam, GET_REQUEST);
 
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
@@ -160,7 +162,7 @@ public class BanqueRESTTest {
 			operationUserParam.setAmount(BigDecimal.valueOf(200));
 			operationUserParam.setLabelOperation("Credit op test 1");
 
-			JsonResult jsonResult = this.retrieveJsonResultConsumes(CREDIT_ACCOUNT_REST, operationUserParam);
+			JsonResult jsonResult = this.retrieveJsonResultConsumes(CREDIT_ACCOUNT_REST, operationUserParam , POST_REQUEST);
 
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
@@ -179,7 +181,7 @@ public class BanqueRESTTest {
 			operationUserParam.setAmount(MAX_AMOUNT_AUTORIZED.add(BigDecimal.valueOf(20)));
 			operationUserParam.setLabelOperation("Credit op test 1");
 
-			this.testFunctionalErrorCode(CREDIT_ACCOUNT_REST, operationUserParam, KEY_MAX_AMOUNT_EXCEPTION);
+			this.testFunctionalErrorCode(CREDIT_ACCOUNT_REST, operationUserParam, KEY_MAX_AMOUNT_EXCEPTION, POST_REQUEST);
 
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
@@ -225,7 +227,7 @@ public class BanqueRESTTest {
 			operationUserParam.setAmount(BigDecimal.valueOf(100));
 			operationUserParam.setLabelOperation("Debit op test 1");
 
-			JsonResult jsonResult = this.retrieveJsonResultConsumes(DEBIT_ACCOUNT_REST, operationUserParam);
+			JsonResult jsonResult = this.retrieveJsonResultConsumes(DEBIT_ACCOUNT_REST, operationUserParam , POST_REQUEST);
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
 			assertNotNull(jsonResult.getResult());
@@ -244,7 +246,7 @@ public class BanqueRESTTest {
 			operationUserParam.setAmount(BigDecimal.valueOf(800));
 			operationUserParam.setLabelOperation("Debit op test 1");
 
-			this.testFunctionalErrorCode(DEBIT_ACCOUNT_REST, operationUserParam, NEGATIVE_BALANCE_AMOUNT_EXCEPTION);
+			this.testFunctionalErrorCode(DEBIT_ACCOUNT_REST, operationUserParam, NEGATIVE_BALANCE_AMOUNT_EXCEPTION, POST_REQUEST);
 
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
@@ -288,7 +290,7 @@ public class BanqueRESTTest {
 			Map<String, String> params = new HashMap<>();
 			params.put("userIdentifier", IDENTIFIER_USER_TEST);
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(BALANCE_USER_REST, params);
+			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(BALANCE_USER_REST, params , GET_REQUEST);
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
 			assertTrue(jsonResult.getErrors() == null || jsonResult.getErrors().isEmpty());
@@ -330,15 +332,27 @@ public class BanqueRESTTest {
 	 * 
 	 * @param urlToTest
 	 * @param initialObject
+	 * @param requestType
 	 * @return
 	 * @throws Exception
 	 */
-	protected JsonResult retrieveJsonResultConsumes(final String urlToTest, final Object initialObject)
+	protected JsonResult retrieveJsonResultConsumes(final String urlToTest, final Object initialObject, final String requestType)
 			throws Exception {
+		
+		MockHttpServletRequestBuilder resultActions = null;
+
+		switch(requestType){
+			case GET_REQUEST:
+				resultActions = get(urlToTest);
+				break;
+			default:
+				resultActions = post(urlToTest);
+				break;
+		}
 
 		final String json = mapper.writeValueAsString(initialObject);
 		
-		final MvcResult mvcResult = mockMvc.perform(post(urlToTest).with(httpBasic(BANK_USER_MANAGER, BANK_PASSWORD_MANAGER)).accept(MediaType.APPLICATION_JSON)
+		final MvcResult mvcResult = mockMvc.perform(resultActions.with(httpBasic(BANK_USER_MANAGER, BANK_PASSWORD_MANAGER)).accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON).content(json)).andReturn();
 
 		assertNotNull(mvcResult);
@@ -361,10 +375,20 @@ public class BanqueRESTTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected JsonResult retrieveJsonResultConsumesForm(final String urlToTest, final Map<String, String> params)
+	protected JsonResult retrieveJsonResultConsumesForm(final String urlToTest, final Map<String, String> params, final String requestType)
 			throws Exception {
 
-		MockHttpServletRequestBuilder requestBuilder = post(urlToTest).accept(MediaType.APPLICATION_JSON);
+		MockHttpServletRequestBuilder resultActions = null;
+		switch(requestType){
+		case GET_REQUEST:
+			resultActions = get(urlToTest);
+			break;
+		default:
+			resultActions = post(urlToTest);
+			break;
+		}
+		
+		MockHttpServletRequestBuilder requestBuilder = resultActions.accept(MediaType.APPLICATION_JSON);
 
 		if (params != null) {
 			for (Map.Entry<String, String> paramEntry : params.entrySet()) {
@@ -390,11 +414,12 @@ public class BanqueRESTTest {
 	 * @param urlToTest
 	 * @param initialObject
 	 * @param keyCodeError
+	 * @param requestType/
 	 * @throws Exception
 	 */
 	protected void testFunctionalErrorCode(final String urlToTest, final Object initialObject,
-			final String keyCodeError) throws Exception {
-		final JsonResult jsonResult = this.retrieveJsonResultConsumes(urlToTest, initialObject);
+			final String keyCodeError, final String requestType) throws Exception {
+		final JsonResult jsonResult = this.retrieveJsonResultConsumes(urlToTest, initialObject , requestType);
 		this.testErrorOnJsonResult(jsonResult, keyCodeError);
 	}
 
@@ -411,16 +436,5 @@ public class BanqueRESTTest {
 
 	}
 
-	/**
-	 * Test functional error not found.<br/>
-	 * 
-	 * @param urlToTest
-	 * @param initialObject
-	 * @throws Exception
-	 */
-	protected void testFunctionalErrorUserNotFound(final String urlToTest, final Object initialObject)
-			throws Exception {
-		this.testFunctionalErrorCode(urlToTest, initialObject, USER_NOT_FOUND_EXCEPTION);
-	}
 
 }

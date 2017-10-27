@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class JsonResult<T> implements Serializable{
 	
 	/**
@@ -11,14 +13,19 @@ public class JsonResult<T> implements Serializable{
 	 */
 	private static final long serialVersionUID = -2104368669801397895L;
 
+	@ApiModelProperty(value="The value to return")
 	private T result;
 	
+	@ApiModelProperty(value="The informations list of the result")
 	private List<String> infos = new ArrayList<>();
 	
+	@ApiModelProperty(value="the warnings list of the result")
 	private List<String> warning =  new ArrayList<>();
 	
+	@ApiModelProperty(value="The errors list of the result")
 	private List<String> errors = new ArrayList<>();
 
+	@ApiModelProperty(value="Boolean to return if the operation has succeded.")
 	private boolean success;
 	
 	public T getResult() {

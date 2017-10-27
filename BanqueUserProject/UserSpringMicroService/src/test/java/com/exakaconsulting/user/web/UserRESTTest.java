@@ -448,13 +448,13 @@ public class UserRESTTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected String retrieveResultConsumes(final String urlToTest, final Object initialObject , final String typeRequest)
+	protected String retrieveResultConsumes(final String urlToTest, final Object initialObject , final String requestType)
 			throws Exception {
 
 		final String json = mapper.writeValueAsString(initialObject);
 
 		MockHttpServletRequestBuilder resultActions = null;
-		switch(typeRequest){
+		switch(requestType){
 			case GET_REQUEST:
 				resultActions = get(urlToTest);
 				break;
@@ -484,11 +484,11 @@ public class UserRESTTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected String retrieveResultConsumesForm(final String urlToTest, final Map<String, String> params, final String typeRequest)
+	protected String retrieveResultConsumesForm(final String urlToTest, final Map<String, String> params, final String requestType)
 			throws Exception {
 
 		MockHttpServletRequestBuilder resultActions = null;
-		switch(typeRequest){
+		switch(requestType){
 		case GET_REQUEST:
 			resultActions = get(urlToTest);
 			break;

@@ -5,7 +5,6 @@ import static com.exakaconsulting.IConstantApplication.BANQUE_SERVICE;
 import static com.exakaconsulting.IConstantApplication.CREDIT_ACCOUNT_REST;
 import static com.exakaconsulting.IConstantApplication.DEBIT_ACCOUNT_REST;
 import static com.exakaconsulting.IConstantApplication.LIST_OPERATION_REST;
-import static com.exakaconsulting.IConstantApplication.TECHNICAL_EXCEPTION;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,8 +29,14 @@ import com.exakaconsulting.banque.service.IBanqueService;
 import com.exakaconsulting.banque.service.MaxAmountCreditException;
 import com.exakaconsulting.banque.service.NegativeBalanceAmountException;
 import com.exakaconsulting.banque.service.UserBanqueNotFoundException;
+import com.exakaconsulting.exception.TechnicalException;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
+@Api(value = "/", description = "This REST API is use to make actions on account user.<br/>")
 public class BanqueController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BanqueController.class);
@@ -40,7 +45,8 @@ public class BanqueController {
 	@Qualifier(BANQUE_SERVICE)
 	private IBanqueService banqueService;
 	
-	@RequestMapping(value = "/banque", method = { RequestMethod.POST, RequestMethod.GET })
+	@ApiOperation(value = "This method is use to retrieve the home of the bank", response = ModelAndView.class)
+	@RequestMapping(value = "/banque", method = { RequestMethod.GET })
 	public ModelAndView home() {
 		ModelAndView modelView = new ModelAndView("banqueViewsHome");
 
@@ -50,11 +56,12 @@ public class BanqueController {
 
 	}
 
-	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.GET, RequestMethod.POST }, consumes = {
+	@ApiOperation(value = "This method is to retrieve the list of operations by a user between 2 dates", response = JsonResult.class , notes="JsonResult of AccountOperationBean")
+	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.GET}, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager') OR hasRole('bankcollaborator')")
-	public JsonResult<List<AccountOperationBean>> listOperations(@RequestBody final AccountOperationStateParam accountOperationStateParam) {
+	public JsonResult<List<AccountOperationBean>> listOperations(@ApiParam(value="The account operation", required=true) @RequestBody(required=true) final AccountOperationStateParam accountOperationStateParam) {
 		LOGGER.info("BEGIN of the method listOperations of the class " + BanqueController.class.getName()
 				+ "identifierUser : " + accountOperationStateParam.getUserIdentifier() + " , Begin date : "
 				+ accountOperationStateParam.getBeginDate() + " , End Date : "
@@ -71,7 +78,7 @@ public class BanqueController {
 			jsonResult.addError(exception.getMessage());
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method listOperations of the class " + BanqueController.class.getName()
 				+ "identifierUser : " + accountOperationStateParam.getUserIdentifier() + " , Begin date : "
@@ -85,11 +92,12 @@ public class BanqueController {
 	 * credit Account for user.<br/>
 	 * 
 	 */
+	@ApiOperation(value = "This method credits the account of the user with the amount in input.", response = JsonResult.class)
 	@RequestMapping(value = CREDIT_ACCOUNT_REST, method = { RequestMethod.POST }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager')")
-	public JsonResult<Object> creditAccount(@RequestBody final OperationUserParam operationUserParam) {
+	public JsonResult<Object> creditAccount(@ApiParam(value="The credit operation on account") @RequestBody final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method creditAccount of the class " + BanqueController.class.getName()
 				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
@@ -106,7 +114,7 @@ public class BanqueController {
 			jsonResult.addError(exception.getMessage());
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 
 		LOGGER.info("END of the method creditAccount of the class " + BanqueController.class.getName()
@@ -116,11 +124,12 @@ public class BanqueController {
 		return jsonResult;
 	}
 
+	@ApiOperation(value = "This method debits the account of the user with the amount in input.", response = JsonResult.class , notes="JsonResult")
 	@RequestMapping(value = DEBIT_ACCOUNT_REST, method = { RequestMethod.POST }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager')")
-	public JsonResult<BigDecimal> debitAccount(@RequestBody final OperationUserParam operationUserParam) {
+	public JsonResult<BigDecimal> debitAccount(@ApiParam(value="The debit operation on account")  @RequestBody final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method debitAccount of the class " + BanqueController.class.getName()
 				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
@@ -137,7 +146,7 @@ public class BanqueController {
 			jsonResult.addError(exception.getMessage());
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 
 		LOGGER.info("END of the method debitAccount of the class " + BanqueController.class.getName()
@@ -147,12 +156,13 @@ public class BanqueController {
 		return jsonResult;
 	}
 
-	@RequestMapping(value = BALANCE_USER_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@ApiOperation(value = "This method retrieve the balance of the user", response = JsonResult.class , notes="JsonResult of BigDecimal")
+	@RequestMapping(value = BALANCE_USER_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager') OR hasRole('bankcollaborator')")
 	public JsonResult<BigDecimal> retrieveBalanceAccountUser(
-			@RequestParam(name = "userIdentifier", required = true) final String userIdentifier) {
+			@ApiParam(value = "The user identifier for the search.", required=true) @RequestParam(name = "userIdentifier", required = true) final String userIdentifier) {
 
 		LOGGER.info("BEGIN of the method debitAccount of the class " + BanqueController.class.getName() + " ( userIdentifier = " + userIdentifier + " ) ");
 		
@@ -166,7 +176,7 @@ public class BanqueController {
 			jsonResult.addError(exception.getMessage());
 		}catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method debitAccount of the class " + BanqueController.class.getName() + " ( userIdentifier = " + userIdentifier + " ) ");
 

@@ -21,10 +21,7 @@ public interface IConstantApplication {
 	static final String NEGATIVE_BALANCE_AMOUNT_EXCEPTION = "banque.negativebalance.amount";
 		
 	static final String USER_NOT_FOUND_EXCEPTION = "banque.user.notfound";
-	
-	/** Banque technical error **/
-	static final String TECHNICAL_EXCEPTION = "banque.technical.error";
-	
+		
 	/** Banque datasource spring bean **/
 	static final String BANQUE_DATASOURCE_BEAN = "BanqueDataSourceBean";
 
