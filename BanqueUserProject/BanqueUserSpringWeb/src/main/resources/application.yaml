@@ -1,0 +1,24 @@
+spring: 
+   jackson:
+     date-format: yyyy-MM-dd'T'HH:mm:ss
+     time-zone: Europe/Paris
+   mvc:
+    view:
+      prefix: /
+      suffix: .jsp
+  
+
+server:
+    port: 25000
+    contextPath: /exa
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:20000/eureka/
+  
+ 
+
+   
+        
+      

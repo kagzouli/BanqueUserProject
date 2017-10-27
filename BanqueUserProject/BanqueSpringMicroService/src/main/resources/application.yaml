@@ -1,0 +1,32 @@
+spring: 
+   application:
+      name: banque-service
+
+   mvc:
+    view:
+      prefix: /
+      suffix: .jsp 
+   jmx:
+     default-domain: banqueMicroService
+     enabled: false 
+ 
+endpoints:
+    jmx:
+      domain: banqueMicroService
+
+server:
+    port: 14090
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:20000/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${server.port}:${random.value}}
+
+
+   
+        
+      
