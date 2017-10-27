@@ -1,6 +1,5 @@
 package com.exakaconsulting.user.web;
 
-import static com.exakaconsulting.IConstantUserApplication.TECHNICAL_EXCEPTION;
 import static com.exakaconsulting.IConstantUserApplication.USERS_LIST_REST;
 import static com.exakaconsulting.IConstantUserApplication.ROLES_LIST_REST;
 import static com.exakaconsulting.IConstantUserApplication.INSERT_USER_REST;
@@ -9,6 +8,7 @@ import static com.exakaconsulting.IConstantUserApplication.DELETE_USER_REST;
 import static com.exakaconsulting.IConstantUserApplication.USER_SERVICE;
 import static com.exakaconsulting.IConstantUserApplication.USERS_BYCODE_REST;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.exakaconsulting.JsonResult;
+import com.exakaconsulting.exception.TechnicalException;
 import com.exakaconsulting.user.service.IUserService;
 import com.exakaconsulting.user.service.RoleBean;
 import com.exakaconsulting.user.service.UserAlreadyExistsException;
@@ -33,7 +34,11 @@ import com.exakaconsulting.user.service.UserBean;
 import com.exakaconsulting.user.service.UserLightBean;
 import com.exakaconsulting.user.service.UserNotFoundException;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
+@Api(value = "/", description = "This REST API is use to have informations and do action on user.<br/>")
 public class UserController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -51,76 +56,73 @@ public class UserController {
 		return modelView;
 	}
 
+	@ApiOperation(value = "This method is use to retrieve user list", response = UserLightBean.class, responseContainer = "List")
 	@RequestMapping(value = USERS_LIST_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	@PreAuthorize("hasRole('useradministrator') OR hasRole('userbank')")
-	public JsonResult<List<UserLightBean>> retrieveUsersList() {
+	@PreAuthorize("hasRole('useradministrator') OR hasRole('userbank')")	
+	public List<UserLightBean> retrieveUsersList() {
 
 		LOGGER.info("BEGIN of the method retrieveUsersList of the class " + UserController.class.getName());
 
-		JsonResult<List<UserLightBean>> jsonResult = new JsonResult<>();
+		List<UserLightBean> usersList = Collections.emptyList();
 		try {
-			final List<UserLightBean> usersList = userService.retrieveUsersList();
-			jsonResult.setResult(usersList);
-			jsonResult.setSuccess(true);
+			usersList = userService.retrieveUsersList();
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method retrieveUsersList of the class " + UserController.class.getName());
 
-		return jsonResult;
+		return usersList;
 	}
 
+	@ApiOperation(value = "This method is use to retrieve a user by the code.", response = UserBean.class)
 	@RequestMapping(value = USERS_BYCODE_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator') OR hasRole('userbank')")
-	public JsonResult<UserBean> retrieveUserByCode(@RequestParam(name = "userCode", required = true) final String userCode) {
+	public UserBean retrieveUserByCode(@RequestParam(name = "userCode", required = true) final String userCode) {
 		LOGGER.info("BEGIN of the method retrieveUserByCode of the class " + UserController.class.getName()
 				+ "with the parameter userCode = " + userCode); 
 
-		JsonResult<UserBean> jsonResult = new JsonResult<>();
+		UserBean userBean = null;
 		try {
-			final UserBean userBean = userService.retrieveUserByCode(userCode);
-			jsonResult.setResult(userBean);
-			jsonResult.setSuccess(true);
+			userBean = userService.retrieveUserByCode(userCode);
 		} catch (UserNotFoundException exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(exception.getMessage());
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method retrieveUserByCode of the class " + UserController.class.getName()
 				+ "with the parameter userCode = " + userCode);
 
-		return jsonResult;
+		return userBean;
 	}
 
+	@ApiOperation(value = "This method is use to retrieve the roles list in the application.", response = RoleBean.class , responseContainer="List")
 	@RequestMapping(value = ROLES_LIST_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator')")
-	public JsonResult<List<RoleBean>> retrieveRolesList() {
+	public List<RoleBean> retrieveRolesList() {
 
 		LOGGER.info("BEGIN of the method retrieveRolesList of the class " + UserController.class.getName());
 
-		JsonResult<List<RoleBean>> jsonResult = new JsonResult<>();
+		List<RoleBean> rolesList = Collections.emptyList();
 		try {
-			final List<RoleBean> rolesList = userService.retrieveRolesList();
-			jsonResult.setResult(rolesList);
-			jsonResult.setSuccess(true);
+			rolesList = userService.retrieveRolesList();
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method retrieveRolesList of the class " + UserController.class.getName());
 
-		return jsonResult;
+		return rolesList;
 	}
 
+	@ApiOperation(value = "This method is use to insert a user in the application.", response = JsonResult.class)
 	@RequestMapping(value = INSERT_USER_REST, method = {  RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
@@ -138,13 +140,14 @@ public class UserController {
 			jsonResult.addError(exception.getMessage());
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method insertUser of the class " + UserController.class.getName());
 
 		return jsonResult;
 	}
 
+	@ApiOperation(value = "This method is use to update a user in the application.", response = JsonResult.class)
 	@RequestMapping(value = UPDATE_USER_REST, method = { RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
@@ -162,14 +165,14 @@ public class UserController {
 			jsonResult.addError(exception.getMessage());
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method updateUser of the class " + UserController.class.getName());
 
 		return jsonResult;
 	}
 	
-	
+	@ApiOperation(value = "This method is use to delete a user in the application.", response = JsonResult.class)
 	@RequestMapping(value = DELETE_USER_REST, method = { RequestMethod.POST }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
@@ -187,7 +190,7 @@ public class UserController {
 			jsonResult.addError(exception.getMessage());
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(TECHNICAL_EXCEPTION);
+			throw new TechnicalException(exception);
 		}
 		LOGGER.info("END of the method deleteUser of the class " + UserController.class.getName()
 				+ "with the parameter userCode = " + userCode);

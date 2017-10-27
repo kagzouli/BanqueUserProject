@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +46,8 @@ import com.exakaconsulting.JsonResult;
 import com.exakaconsulting.user.service.RoleBean;
 import com.exakaconsulting.user.service.UserApplicationTest;
 import com.exakaconsulting.user.service.UserBean;
+import com.exakaconsulting.user.service.UserLightBean;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
@@ -106,18 +109,16 @@ public class UserRESTTest {
 	public void listAllUsers() {
 		try {
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_LIST_REST, new HashMap<>(), GET_REQUEST);
-
-			assertNotNull(jsonResult);
-			assertEquals(jsonResult.isSuccess(), true);
-
-			List<Map<String, Object>> usersList = (List<Map<String, Object>>) jsonResult.getResult();
+			final String responseContent = this.retrieveResultConsumesForm(USERS_LIST_REST, new HashMap<>(), GET_REQUEST);
+			JavaType javaType = mapper.getTypeFactory().constructCollectionType(List.class, UserLightBean.class);
+			final List<UserLightBean> usersList = mapper.readValue(responseContent, javaType);
+			
 			assertNotNull(usersList);
 			assertEquals(usersList.size(), 3);
-			final Map<String, Object> mapUserTest = usersList.get(2);
-			assertEquals(mapUserTest.get("identifierCodeUser"), IDENTIFIER_USER_TEST);
-			assertEquals(mapUserTest.get("firstName"), FIRST_NAME_USER_TEST);
-			assertEquals(mapUserTest.get("lastName"), LAST_NAME_USER_TEST);
+			UserLightBean userBean = usersList.get(2);
+			assertEquals(userBean.getIdentifierCodeUser(), IDENTIFIER_USER_TEST);
+			assertEquals(userBean.getFirstName(), FIRST_NAME_USER_TEST);
+			assertEquals(userBean.getLastName(), LAST_NAME_USER_TEST);
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
 			assertTrue(false);
@@ -143,13 +144,10 @@ public class UserRESTTest {
 			Map<String, String> params = new HashMap<>();
 			params.put("userCode", IDENTIFIER_USER_TEST);
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_BYCODE_REST, params, GET_REQUEST);
-
-			assertNotNull(jsonResult);
-			assertEquals(jsonResult.isSuccess(), true);
-
-			final Map<String, Object> mapUserBean = (Map<String, Object>) jsonResult.getResult();
-			this.testUserExists(mapUserBean);
+			final String responseContent = this.retrieveResultConsumesForm(USERS_BYCODE_REST, params, GET_REQUEST);
+			final UserBean userBean = mapper.readValue(responseContent, UserBean.class);
+	
+			this.testUserExists(userBean);
 
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
@@ -164,11 +162,9 @@ public class UserRESTTest {
 			Map<String, String> params = new HashMap<>();
 			params.put("userCode", IDENTIFIER_USER_NOTEXISTS);
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(USERS_BYCODE_REST, params, GET_REQUEST);
-
-			assertNotNull(jsonResult);
-			this.testErrorOnJsonResult(jsonResult, USER_NOT_FOUND_EXCEPTION);
-
+			final String responseContent = this.retrieveResultConsumesForm(USERS_BYCODE_REST, params, GET_REQUEST);
+			assertTrue(StringUtils.isBlank(responseContent));
+			
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
 			assertTrue(false);
@@ -190,16 +186,14 @@ public class UserRESTTest {
 	public void testListAllRoles() {
 		try {
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(ROLES_LIST_REST, new HashMap<>(), GET_REQUEST);
+			final String responseContent = this.retrieveResultConsumesForm(ROLES_LIST_REST, new HashMap<>(), GET_REQUEST);
+			JavaType javaType = mapper.getTypeFactory().constructCollectionType(List.class, RoleBean.class);
+			final List<RoleBean> rolesList = mapper.readValue(responseContent, javaType);
 
-			assertNotNull(jsonResult);
-			assertEquals(jsonResult.isSuccess(), true);
-
-			List<Map<String, Object>> rolesList = (List<Map<String, Object>>) jsonResult.getResult();
 			assertNotNull(rolesList);
 			assertEquals(rolesList.size(), 4);
-			final Map<String, Object> mapRoleTest = rolesList.get(0);
-			assertEquals(mapRoleTest.get("roleCode"), ROLE_TEST_USER);
+			final RoleBean roleBean = rolesList.get(0);
+			assertEquals(roleBean.getRoleCode(), ROLE_TEST_USER);
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
 			assertTrue(false);
@@ -239,7 +233,8 @@ public class UserRESTTest {
 		userBean.setListRoles(listRoles);
 
 		try {
-			JsonResult jsonResult = this.retrieveJsonResultConsumes(INSERT_USER_REST, userBean, POST_REQUEST);
+			final String result = this.retrieveResultConsumes(INSERT_USER_REST, userBean, POST_REQUEST);
+			final JsonResult jsonResult = mapper.readValue(result, JsonResult.class);
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
 			assertTrue(jsonResult.getErrors() == null || jsonResult.getErrors().isEmpty());
@@ -321,7 +316,9 @@ public class UserRESTTest {
 			userBean.setListRoles(listRoles);
 
 			// Update the user
-			JsonResult jsonResult = this.retrieveJsonResultConsumes(UPDATE_USER_REST, userBean , POST_REQUEST);
+			final String result = this.retrieveResultConsumes(UPDATE_USER_REST, userBean , POST_REQUEST);
+			final JsonResult jsonResult = mapper.readValue(result, JsonResult.class);
+
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
 			assertTrue(jsonResult.getErrors() == null || jsonResult.getErrors().isEmpty());
@@ -385,7 +382,9 @@ public class UserRESTTest {
 		params.put("userCode", IDENTIFIER_USER_TEST);
 
 		try{
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(DELETE_USER_REST, params, POST_REQUEST);
+			final String responseContent = this.retrieveResultConsumesForm(DELETE_USER_REST, params, POST_REQUEST);
+			final JsonResult<Object> jsonResult = mapper.readValue(responseContent, JsonResult.class);
+
 		
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);
@@ -402,7 +401,8 @@ public class UserRESTTest {
 		params.put("userCode", IDENTIFIER_USER_NOTEXISTS);
 
 		try{
-			final JsonResult jsonResult = this.retrieveJsonResultConsumesForm(DELETE_USER_REST, params , POST_REQUEST);
+			final String responseContent = this.retrieveResultConsumesForm(DELETE_USER_REST, params , POST_REQUEST);
+			final JsonResult<Object> jsonResult = mapper.readValue(responseContent, JsonResult.class);
 			this.testErrorOnJsonResult(jsonResult, USER_NOT_FOUND_EXCEPTION);
 			assertTrue(true);
 			
@@ -424,21 +424,19 @@ public class UserRESTTest {
 	 * 
 	 * @param userBean
 	 */
-	protected void testUserExists(final Map<String, Object> mapUserBean) {
-		assertNotNull(mapUserBean);
-		assertTrue(!mapUserBean.isEmpty());
-		assertEquals(mapUserBean.get("identifierCodeUser"), IDENTIFIER_USER_TEST);
-		assertEquals(mapUserBean.get("firstName"), FIRST_NAME_USER_TEST);
-		assertEquals(mapUserBean.get("lastName"), LAST_NAME_USER_TEST);
+	protected void testUserExists(final UserBean userBean) {
+		assertNotNull(userBean);
+		assertEquals(userBean.getIdentifierCodeUser(), IDENTIFIER_USER_TEST);
+		assertEquals(userBean.getFirstName(), FIRST_NAME_USER_TEST);
+		assertEquals(userBean.getLastName(), LAST_NAME_USER_TEST);
 
-		final List<Map<String, Object>> listRolesMap = (List<Map<String, Object>>) mapUserBean.get("listRoles");
-		assertNotNull(listRolesMap);
-		assertEquals(listRolesMap.size(), 3);
+		final List<RoleBean> listRolesBean = userBean.getListRoles();
+		assertNotNull(listRolesBean);
+		assertEquals(listRolesBean.size(), 3);
 
-		Map<String, Object> mapRole = listRolesMap.get(0);
-		assertNotNull(mapRole);
-		assertTrue(mapRole.size() > 0);
-		assertEquals(mapRole.get("roleCode"), ROLE_TEST_USER);
+		RoleBean roleBean = listRolesBean.get(0);
+		assertNotNull(roleBean);
+		assertEquals(roleBean.getRoleCode(), ROLE_TEST_USER);
 
 	}
 
@@ -450,7 +448,7 @@ public class UserRESTTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected JsonResult retrieveJsonResultConsumes(final String urlToTest, final Object initialObject , final String typeRequest)
+	protected String retrieveResultConsumes(final String urlToTest, final Object initialObject , final String typeRequest)
 			throws Exception {
 
 		final String json = mapper.writeValueAsString(initialObject);
@@ -475,9 +473,7 @@ public class UserRESTTest {
 
 		final String responseContent = response.getContentAsString();
 		assertNotNull(responseContent);
-
-		final JsonResult jsonResult = mapper.readValue(responseContent, JsonResult.class);
-		return jsonResult;
+		return responseContent;
 	}
 
 	/**
@@ -488,7 +484,7 @@ public class UserRESTTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected JsonResult retrieveJsonResultConsumesForm(final String urlToTest, final Map<String, String> params, final String typeRequest)
+	protected String retrieveResultConsumesForm(final String urlToTest, final Map<String, String> params, final String typeRequest)
 			throws Exception {
 
 		MockHttpServletRequestBuilder resultActions = null;
@@ -517,9 +513,7 @@ public class UserRESTTest {
 
 		final String responseContent = response.getContentAsString();
 		assertNotNull(responseContent);
-
-		final JsonResult jsonResult = mapper.readValue(responseContent, JsonResult.class);
-		return jsonResult;
+		return responseContent;
 	}
 
 	/**
@@ -533,7 +527,8 @@ public class UserRESTTest {
 	 */
 	protected void testFunctionalErrorCode(final String urlToTest, final Object initialObject,
 			final String keyCodeError, final String requestType) throws Exception {
-		final JsonResult jsonResult = this.retrieveJsonResultConsumes(urlToTest, initialObject , requestType);
+		final String responseContent = this.retrieveResultConsumes(urlToTest, initialObject , requestType);
+		final JsonResult jsonResult = mapper.readValue(responseContent, JsonResult.class);
 		this.testErrorOnJsonResult(jsonResult, keyCodeError);
 	}
 

@@ -14,9 +14,6 @@ public interface IConstantUserApplication {
 	static final String TRANSACTIONAL_USER_BEAN  = "TransactionalUserBean";
 
 	
-	/** User technical error **/
-	static final String TECHNICAL_EXCEPTION = "user.technical.error";
-
 	/** User not found **/
 	static final String USER_NOT_FOUND_EXCEPTION = "user.notfound";
 
