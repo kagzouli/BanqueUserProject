@@ -112,7 +112,7 @@ public class BanqueRESTTest {
 			accountOperationParam.setUserIdentifier(IDENTIFIER_USER_TEST);
 			accountOperationParam.setBeginDate(DateUtils.fixDate(2016, 12, 17, 0, 0, 0, 0));
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumes(LIST_OPERATION_REST, accountOperationParam, GET_REQUEST);
+			final JsonResult jsonResult = this.retrieveJsonResultConsumes(LIST_OPERATION_REST, accountOperationParam, POST_REQUEST);
 
 			assertNotNull(jsonResult);
 			assertEquals(jsonResult.isSuccess(), true);

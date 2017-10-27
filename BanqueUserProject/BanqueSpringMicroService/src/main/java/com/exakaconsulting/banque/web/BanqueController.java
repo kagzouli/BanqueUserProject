@@ -57,7 +57,7 @@ public class BanqueController {
 	}
 
 	@ApiOperation(value = "This method is to retrieve the list of operations by a user between 2 dates", response = JsonResult.class , notes="JsonResult of AccountOperationBean")
-	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.GET}, consumes = {
+	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.POST}, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager') OR hasRole('bankcollaborator')")
