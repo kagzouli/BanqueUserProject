@@ -36,6 +36,7 @@ import com.exakaconsulting.user.service.UserNotFoundException;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @Api(value = "/", description = "This REST API is use to have informations and do action on user.<br/>")
@@ -47,6 +48,7 @@ public class UserController {
 	@Qualifier(USER_SERVICE)
 	private IUserService userService;
 
+	@ApiOperation(value = "This method is use to retrieve the list page of users", response = ModelAndView.class)
 	@RequestMapping(value = "/users", method = { RequestMethod.GET })
 	public ModelAndView home() {
 		ModelAndView modelView = new ModelAndView("userViewsHome");
@@ -82,7 +84,7 @@ public class UserController {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator') OR hasRole('userbank')")
-	public UserBean retrieveUserByCode(@RequestParam(name = "userCode", required = true) final String userCode) {
+	public UserBean retrieveUserByCode(@ApiParam(value = "The user code to search.", required=true) @RequestParam(name = "userCode", required = true) final String userCode) {
 		LOGGER.info("BEGIN of the method retrieveUserByCode of the class " + UserController.class.getName()
 				+ "with the parameter userCode = " + userCode); 
 
@@ -177,7 +179,7 @@ public class UserController {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator')")
-	public JsonResult<Object> deleteUser(@RequestParam(name = "userCode", required = true) final String userCode) {
+	public JsonResult<Object> deleteUser(@ApiParam(value = "The user code to delete.", required=true) @RequestParam(name = "userCode", required = true) final String userCode) {
 		LOGGER.info("BEGIN of the method deleteUser of the class " + UserController.class.getName()
 				+ "with the parameter userCode = " + userCode);
 

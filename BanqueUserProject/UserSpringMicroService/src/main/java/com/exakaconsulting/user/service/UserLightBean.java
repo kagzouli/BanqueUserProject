@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class UserLightBean implements Serializable{
 
 	/**
@@ -12,12 +14,16 @@ public class UserLightBean implements Serializable{
 	private static final long serialVersionUID = -1416970217467499972L;
 	
 	@JsonIgnore
+	@ApiModelProperty(value="The user id.")
 	protected Integer userId;
 	
+	@ApiModelProperty(value= "The identifier code of the user.", required=true)
 	protected String identifierCodeUser;
 	
+	@ApiModelProperty(value= "The first name of the user.", required=true)
 	protected String firstName;
 	
+	@ApiModelProperty(value="The last name of the user.", required=true)
 	protected String lastName;
 
 	public Integer getUserId() {

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class RoleBean implements Serializable{
 
 	/**
@@ -14,6 +16,7 @@ public class RoleBean implements Serializable{
 	@JsonIgnore
 	private Integer roleId;
 	
+	@ApiModelProperty(value="The role code" , required=true)
 	private String roleCode;
 
 	public Integer getRoleId() {

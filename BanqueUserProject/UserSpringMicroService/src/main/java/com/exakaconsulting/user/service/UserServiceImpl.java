@@ -70,7 +70,7 @@ public class UserServiceImpl implements IUserService {
 	public void updateUser(UserBean userBean) throws UserNotFoundException{
 		LOGGER.info("BEGIN of the method updateUser of the class " + UserServiceImpl.class.getName());
 
-		Assert.notNull(userBean);
+		Assert.notNull(userBean, "The user bean must be set.");
 		try {
 			//The user must exist if we want to update it.
 			final UserBean userBeanInDb = userDao.retrieveUserByCode(userBean.getIdentifierCodeUser());
@@ -103,7 +103,7 @@ public class UserServiceImpl implements IUserService {
 	public Integer insertUser(UserBean userBean) throws UserAlreadyExistsException {
 		LOGGER.info("BEGIN of the method insertUser of the class " + UserServiceImpl.class.getName());
 
-		Assert.notNull(userBean);
+		Assert.notNull(userBean, "The user bean must be set.");
 		Integer userIdCreated = null;
 		try {
 			final UserBean userBeanInDb = userDao.retrieveUserByCode(userBean.getIdentifierCodeUser());
@@ -129,7 +129,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	@Transactional(rollbackFor = Throwable.class, propagation = Propagation.REQUIRED, transactionManager = TRANSACTIONAL_USER_BEAN)
 	public void deleteUser(final String userCode) throws UserNotFoundException {
-		LOGGER.info("BEGIN of the method deleteUser of the class " + UserServiceImpl.class.getName() + " with the parameter userCode = '" + userCode + "'");
+		LOGGER.info("BEGIN of the method deleteUser of the class " + UserServiceImpl.class.getName() + "/ with the parameter userCode = '" + userCode + "'");
 
 		Assert.hasLength(userCode , "The user code must be set");
 		try {
