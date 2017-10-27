@@ -23,11 +23,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan("com.exakaconsulting.user.*")
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableSwagger2
 public class UserApplication {
 
 	private static final String JNDI_USER_DATASOURCE = "jndi/userDatasource";
@@ -77,6 +84,14 @@ public class UserApplication {
 	public DataSource banqueDatasource(){
 		JndiDataSourceLookup jndiBanqueDatasourceLookup = new JndiDataSourceLookup();
 		return jndiBanqueDatasourceLookup.getDataSource("java:comp/env/" + JNDI_USER_DATASOURCE);
+	}
+	
+	/** For swagger-ui **/
+	@Bean
+	public Docket userApi(){
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com.exakaconsulting.user.web"))
+				.paths(PathSelectors.regex("/*"))
+				.build();
 	}
 	
 	public static void main(String[] args) throws Exception {
