@@ -30,6 +30,10 @@ import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan("com.exakaconsulting.banque.*")
@@ -98,6 +102,15 @@ public class BanqueApplication {
 		HttpComponentsClientHttpRequestFactory httpComponentFactory = new HttpComponentsClientHttpRequestFactory();
 		return new RestTemplate(httpComponentFactory);
 	}
+	
+	/** For swagger-ui **/
+	@Bean
+	public Docket userApi(){
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com.exakaconsulting.banque.web"))
+				/*.paths(PathSelectors.regex("/*"))*/
+				.build();
+	}
+
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(BanqueApplication.class, args);
