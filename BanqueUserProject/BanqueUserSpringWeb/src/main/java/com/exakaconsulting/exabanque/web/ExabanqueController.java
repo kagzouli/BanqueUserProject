@@ -127,7 +127,7 @@ public class ExabanqueController {
 	
 
 	@ApiOperation(value = "This method is use to get the list of account operations of a user in the exabanque using some inputs", response = ExaAccountOperationBean.class , responseContainer="List")
-	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.GET }, consumes = {
+	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.POST }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public List<ExaAccountOperationBean> listOperations(@ApiParam(value="The account operations to search") @RequestBody(required=true) final AccountOperationStateParam accountOperationStateParam) throws UserExaBanqueNotFoundException  {

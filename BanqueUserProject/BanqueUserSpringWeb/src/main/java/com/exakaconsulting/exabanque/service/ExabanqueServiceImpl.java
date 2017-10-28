@@ -21,10 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.exakaconsulting.exabanque.exception.ExaMaxAmountCreditException;
 import com.exakaconsulting.exabanque.exception.ExaNegativeBalanceAmountException;
@@ -62,20 +62,19 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 	public BigDecimal retrieveBalanceAmount(String userIdentifier) throws UserExaBanqueNotFoundException {
 		Assert.hasLength(userIdentifier, "userIdentifier must be set");
 
-		// Get the user.
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("userIdentifier", userIdentifier);
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.set("Authorization", this.stringSecurityCollaborator());
 		// set your entity to send
-		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(headers);
 
 		BigDecimal balance = null;
 		try {
-			final ResponseEntity<JsonResultAmount> entityJsonResult = restTemplate.exchange(RETRIEVE_BALANCE_REST,
-					HttpMethod.POST, entity, JsonResultAmount.class);
+			UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromHttpUrl(RETRIEVE_BALANCE_REST)
+			        .queryParam("userIdentifier", userIdentifier);
+			
+			final ResponseEntity<JsonResultAmount> entityJsonResult = restTemplate.exchange(urlBuilder.build().encode().toUri(),
+					HttpMethod.GET, entity, JsonResultAmount.class);
 			
 			if (entityJsonResult == null || entityJsonResult.getBody() == null){
 				throw new TechnicalException("response Json null");		
@@ -90,6 +89,8 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 				throw new UserExaBanqueNotFoundException(USER_NOT_FOUND_ERROR);
 			} else if (HttpStatus.FORBIDDEN.equals(clientErrorException.getStatusCode())) {
 				throw new UserExaBanqueNotFoundException(USER_NOT_FOUND_ERROR);
+			}else{
+				throw new TechnicalException(clientErrorException);
 			}
 
 		}

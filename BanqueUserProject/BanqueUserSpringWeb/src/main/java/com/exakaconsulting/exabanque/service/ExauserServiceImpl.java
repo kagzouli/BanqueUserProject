@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,11 +18,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.exakaconsulting.exabanque.exception.TechnicalException;
+import com.fasterxml.jackson.databind.JavaType;
 
 @Service
 public class ExauserServiceImpl implements IExauserService {
@@ -49,24 +50,21 @@ public class ExauserServiceImpl implements IExauserService {
 
 		LOGGER.info("BEGIN of the method retrieveUsersList of the class " + ExauserServiceImpl.class.getName());
 
-
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.set("Authorization", this.stringSecurity());
 		// set your entity to send
-		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(headers);
 
-		
-		final ResponseEntity<JsonResultListExakaUser> entityJsonResult = restTemplate.exchange(USER_LIST_REST,
-				HttpMethod.POST , entity, JsonResultListExakaUser.class);
+		ParameterizedTypeReference<List<ExaUserBean>> paramExaUserBean = new ParameterizedTypeReference<List<ExaUserBean>>() {};
+		final ResponseEntity<List<ExaUserBean>> entityJsonResult = restTemplate.exchange(USER_LIST_REST,
+				HttpMethod.GET , entity, paramExaUserBean);
 
-		if (entityJsonResult == null || entityJsonResult.getBody() == null || !entityJsonResult.getBody().isSuccess()) {
+		if (entityJsonResult == null || entityJsonResult.getBody() == null) {
 			throw new TechnicalException("technical error");
 		}
 
-		List<ExaUserBean> listUsers = (List<ExaUserBean>) entityJsonResult.getBody().getResult();
+		List<ExaUserBean> listUsers = (List<ExaUserBean>) entityJsonResult.getBody();
 
 		LOGGER.info("END of the method retrieveUsersList of the class " + ExauserServiceImpl.class.getName());
 		return listUsers;
