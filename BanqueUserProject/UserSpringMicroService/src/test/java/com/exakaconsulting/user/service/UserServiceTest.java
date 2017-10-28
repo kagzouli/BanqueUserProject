@@ -4,7 +4,6 @@ import static com.exakaconsulting.IConstantUserApplication.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -113,7 +112,7 @@ public class UserServiceTest extends AbstractUserService {
 			userBean.setIdentifierCodeUser(IDENTIFIER_NEW_USER);
 			userBean.setFirstName(FIRST_NAME_NEW_USER);
 			userBean.setLastName(LAST_NAME_NEW_USER);
-			userBean.setLocale(new Locale(LOCALE_NEW_USER));
+			userBean.setLocale(LOCALE_NEW_USER);
 
 			List<RoleBean> listRoles = new ArrayList<>();
 
@@ -140,7 +139,7 @@ public class UserServiceTest extends AbstractUserService {
 			assertEquals(userBean.getFirstName(), FIRST_NAME_NEW_USER);
 			assertEquals(userBean.getLastName(), LAST_NAME_NEW_USER);
 			assertNotNull(userDbBean.getLocale());
-			assertEquals(StringUtils.upperCase(userDbBean.getLocale().getLanguage()), LOCALE_NEW_USER);
+			assertEquals(StringUtils.upperCase(userDbBean.getLocale()), LOCALE_NEW_USER);
 
 			final List<RoleBean> listRoleDbBean = userDbBean.getListRoles();
 			assertNotNull(listRoleDbBean);
@@ -167,7 +166,7 @@ public class UserServiceTest extends AbstractUserService {
 			userBean.setIdentifierCodeUser(IDENTIFIER_USER_TEST);
 			userBean.setFirstName(FIRST_NAME_NEW_USER);
 			userBean.setLastName(LAST_NAME_NEW_USER);
-			userBean.setLocale(new Locale(LOCALE_NEW_USER));
+			userBean.setLocale(LOCALE_NEW_USER);
 
 			List<RoleBean> listRoles = new ArrayList<>();
 
@@ -208,7 +207,7 @@ public class UserServiceTest extends AbstractUserService {
 			userBean.setIdentifierCodeUser(IDENTIFIER_USER_TEST);
 			userBean.setFirstName(newFirstName);
 			userBean.setLastName(newLastName);
-			userBean.setLocale(new Locale(LOCALE_NEW_USER));
+			userBean.setLocale(LOCALE_NEW_USER);
 
 			List<RoleBean> listRoles = new ArrayList<>();
 
@@ -233,7 +232,7 @@ public class UserServiceTest extends AbstractUserService {
 			assertEquals(userDbBean.getFirstName(), newFirstName);
 			assertEquals(userDbBean.getLastName(), newLastName);
 			assertNotNull(userDbBean.getLocale());
-			assertEquals(StringUtils.upperCase(userDbBean.getLocale().getLanguage()), LOCALE_NEW_USER);
+			assertEquals(StringUtils.upperCase(userDbBean.getLocale()), LOCALE_NEW_USER);
 
 			final List<RoleBean> listRoleDbBean = userDbBean.getListRoles();
 			assertNotNull(listRoleDbBean);
@@ -270,7 +269,7 @@ public class UserServiceTest extends AbstractUserService {
 			userBean.setIdentifierCodeUser(IDENTIFIER_USER_NOTEXISTS);
 			userBean.setFirstName(newFirstName);
 			userBean.setLastName(newLastName);
-			userBean.setLocale(new Locale(LOCALE_NEW_USER));
+			userBean.setLocale(LOCALE_NEW_USER);
 
 			List<RoleBean> listRoles = new ArrayList<>();
 

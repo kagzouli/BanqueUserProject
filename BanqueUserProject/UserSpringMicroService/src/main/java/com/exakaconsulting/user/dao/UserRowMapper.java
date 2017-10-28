@@ -2,7 +2,6 @@ package com.exakaconsulting.user.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -17,7 +16,7 @@ public class UserRowMapper implements RowMapper<UserBean>{
 		userBean.setIdentifierCodeUser(rs.getString("userIdentifier"));
 		userBean.setFirstName(rs.getString("firstName"));
 		userBean.setLastName(rs.getString("lastName"));
-		userBean.setLocale(new Locale(rs.getString("locale")));
+		userBean.setLocale(rs.getString("locale"));
 		return userBean;
 	}
 	

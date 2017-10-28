@@ -19,7 +19,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -218,7 +217,7 @@ public class UserRESTTest {
 		userBean.setIdentifierCodeUser(IDENTIFIER_NEW_USER);
 		userBean.setFirstName(FIRST_NAME_NEW_USER);
 		userBean.setLastName(LAST_NAME_NEW_USER);
-		userBean.setLocale(new Locale(LOCALE_NEW_USER));
+		userBean.setLocale(LOCALE_NEW_USER);
 
 		List<RoleBean> listRoles = new ArrayList<>();
 
@@ -251,7 +250,7 @@ public class UserRESTTest {
 		userBean.setIdentifierCodeUser(IDENTIFIER_USER_TEST);
 		userBean.setFirstName(FIRST_NAME_NEW_USER);
 		userBean.setLastName(LAST_NAME_NEW_USER);
-		userBean.setLocale(new Locale(LOCALE_NEW_USER));
+		userBean.setLocale(LOCALE_NEW_USER);
 
 		List<RoleBean> listRoles = new ArrayList<>();
 
@@ -301,7 +300,7 @@ public class UserRESTTest {
 			userBean.setIdentifierCodeUser(IDENTIFIER_USER_TEST);
 			userBean.setFirstName(newFirstName);
 			userBean.setLastName(newLastName);
-			userBean.setLocale(new Locale(LOCALE_NEW_USER));
+			userBean.setLocale(LOCALE_NEW_USER);
 
 			List<RoleBean> listRoles = new ArrayList<>();
 
@@ -340,7 +339,7 @@ public class UserRESTTest {
 			userBean.setIdentifierCodeUser(IDENTIFIER_USER_NOTEXISTS);
 			userBean.setFirstName(newFirstName);
 			userBean.setLastName(newLastName);
-			userBean.setLocale(new Locale(LOCALE_NEW_USER));
+			userBean.setLocale(LOCALE_NEW_USER);
 
 			List<RoleBean> listRoles = new ArrayList<>();
 

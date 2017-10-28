@@ -95,7 +95,7 @@ public class UserDaoImpl implements IUserDao{
 			params.put("userIdentifierParam", userBean.getIdentifierCodeUser());
 			params.put("firstNameParam", userBean.getFirstName());
 			params.put("lastNameParam", userBean.getLastName());
-			params.put("localeParam", StringUtils.upperCase(userBean.getLocale().getLanguage()));
+			params.put("localeParam", StringUtils.upperCase(userBean.getLocale()));
 
 			SqlParameterSource paramSource = new MapSqlParameterSource(params);
 
@@ -170,7 +170,7 @@ public class UserDaoImpl implements IUserDao{
 			params.put("userIdentifierParam", userBean.getIdentifierCodeUser());
 			params.put("firstNameParam", userBean.getFirstName());
 			params.put("lastNameParam", userBean.getLastName());
-			params.put("localeParam", userBean.getLocale().getLanguage());
+			params.put("localeParam", userBean.getLocale());
 
 			Integer returnValue =  this.jdbcTemplate.update(UPDATE_USER_SQL, params);
 
