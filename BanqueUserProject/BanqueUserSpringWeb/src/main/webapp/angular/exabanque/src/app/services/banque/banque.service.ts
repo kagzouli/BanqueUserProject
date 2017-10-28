@@ -1,16 +1,30 @@
 import { Injectable } from '@angular/core';
+import { Http} from '@angular/http';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import { Observable } from 'rxjs/Observable';
+
+import {AccountNumberOperation} from './accountnumberoperation';
+
 
 @Injectable()
 export class BanqueService {
 
-  constructor() { }
+  constructor( private http: Http) { }
 
-  creditAccountNumber(identifierUser : string, labelOperation : string, amount: number){
-    console.log("Credit account number service");
-    
-    console.log("Service IdentifierUser : " + identifierUser);
-    console.log("Service labelOperation : " + labelOperation);
-    console.log("Service amount : " + amount);
+  creditAccountNumber(accountNumberOperation: AccountNumberOperation) {
+
+    const endPoint = '/creditAccount';
+
+    this.http.post('/creditAccount', accountNumberOperation)
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+   // this.http.post(endPoint,)
+
+   // this.jsonp.put(endPoint, { search: params })
+     //         .map(response => <Animal[]> response.json().petfinder.pets.pet);
+
+
   }
 
 }

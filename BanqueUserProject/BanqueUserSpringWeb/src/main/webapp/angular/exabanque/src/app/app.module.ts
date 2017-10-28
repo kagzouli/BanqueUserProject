@@ -1,11 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { PocComponent } from './form/test/poc/poc.component';
-
-import { BanqueService } from './services/banque/banque.service';
 
 
 @NgModule({
@@ -16,9 +15,10 @@ import { BanqueService } from './services/banque/banque.service';
   imports: [
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule
   ],
-  providers: [BanqueService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
