@@ -81,7 +81,7 @@ public class UserController {
 
 	@ApiOperation(value = "This method is use to retrieve a user by the code.", response = UserBean.class)
 	@RequestMapping(value = USERS_BYCODE_REST, method = { RequestMethod.GET }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+			MediaType.APPLICATION_JSON_VALUE }, consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE})
 	@ResponseBody
 	@PreAuthorize("hasRole('useradministrator') OR hasRole('userbank')")
 	public UserBean retrieveUserByCode(@ApiParam(value = "The user code to search.", required=true) @RequestParam(name = "userCode", required = true) final String userCode) {

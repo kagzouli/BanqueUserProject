@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.exakaconsulting.banque.service.BanqueUserBean;
 import com.exakaconsulting.banque.service.UserBanqueNotFoundException;
+import com.exakaconsulting.exception.TechnicalException;
 
 @Repository
 public class BanqueUserDaoImpl implements IBanqueUserDao {
@@ -56,21 +57,25 @@ public class BanqueUserDaoImpl implements IBanqueUserDao {
 
 		BanqueUserBean user = null;
 		try {
-			final ResponseEntity<JsonBanqueUserResult> entityJsonResult = restTemplate.exchange(URL_USER_BY_CODE,
-					HttpMethod.GET, entity, JsonBanqueUserResult.class);
+			final ResponseEntity<BanqueUserBean> entityBanqueUser = restTemplate.exchange(URL_USER_BY_CODE,
+					HttpMethod.GET, entity, BanqueUserBean.class);
+			
+			restTemplate.exchange("/userslist",
+					HttpMethod.GET, entity, String.class);
 
-			if (entityJsonResult == null || entityJsonResult.getBody() == null
-					|| !entityJsonResult.getBody().isSuccess()) {
+			if (entityBanqueUser == null || entityBanqueUser.getBody() == null) {
 				throw new UserBanqueNotFoundException(USER_NOT_FOUND_EXCEPTION);
 			}
 
-			user = (BanqueUserBean) entityJsonResult.getBody().getResult();
+			user = entityBanqueUser.getBody();
 		} catch (HttpClientErrorException clientErrorException) {
 			if (HttpStatus.UNAUTHORIZED.equals(clientErrorException.getStatusCode())) {
 				throw new UserBanqueNotFoundException(USER_NOT_FOUND_EXCEPTION);
 			}else if (HttpStatus.FORBIDDEN.equals(clientErrorException.getStatusCode())) {
 				throw new UserBanqueNotFoundException(USER_NOT_FOUND_EXCEPTION);
-			}			
+			}else{
+				throw new TechnicalException(clientErrorException);
+			}
 		}
 		return user;
 
