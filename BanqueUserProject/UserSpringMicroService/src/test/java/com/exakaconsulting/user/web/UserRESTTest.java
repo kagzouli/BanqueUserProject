@@ -17,6 +17,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.exakaconsulting.JsonResult;
@@ -130,29 +133,6 @@ public class UserRESTTest {
 	 * 
 	 */
 
-	/**
-	 * 
-	 * BEGIN test retrieve user by code.<br/>
-	 * 
-	 */
-
-	@Test
-	public void retrieveUserExistByCode() {
-		try {
-
-			Map<String, String> params = new HashMap<>();
-			params.put("userCode", IDENTIFIER_USER_TEST);
-
-			final String responseContent = this.retrieveResultConsumesForm(USERS_BYCODE_REST, params, GET_REQUEST);
-			final UserBean userBean = mapper.readValue(responseContent, UserBean.class);
-	
-			this.testUserExists(userBean);
-
-		} catch (Exception exception) {
-			LOGGER.error(exception.getMessage(), exception);
-			assertTrue(false);
-		}
-	}
 
 	@Test
 	public void retrieveUserNotExistByCode() {
@@ -496,15 +476,11 @@ public class UserRESTTest {
 			break;
 		}
 
+		MultiValueMap<String, String> paramsMulti = new LinkedMultiValueMap<>();
+		params.entrySet().forEach(valueMap -> paramsMulti.put(valueMap.getKey(), Arrays.asList(valueMap.getValue())));
+		MockHttpServletRequestBuilder requestBuilder = resultActions.params(paramsMulti).accept(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+
 		
-		MockHttpServletRequestBuilder requestBuilder = resultActions.accept(MediaType.APPLICATION_JSON);
-
-		if (params != null) {
-			for (Map.Entry<String, String> paramEntry : params.entrySet()) {
-				requestBuilder = requestBuilder.param(paramEntry.getKey(), paramEntry.getValue());
-			}
-		}
-
 		final MvcResult mvcResult = mockMvc.perform(requestBuilder.with(httpBasic(USERNAME, PASSWORD))).andReturn();
 
 		final MockHttpServletResponse response = mvcResult.getResponse();
