@@ -17,11 +17,14 @@ import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -84,6 +87,12 @@ public class UserApplication {
 		JndiDataSourceLookup jndiBanqueDatasourceLookup = new JndiDataSourceLookup();
 		return jndiBanqueDatasourceLookup.getDataSource("java:comp/env/" + JNDI_USER_DATASOURCE);
 	}
+	
+	@Bean(TRANSACTIONAL_USER_BEAN)
+	public PlatformTransactionManager transactionBanqueBean(final ApplicationContext appContext){
+		return new DataSourceTransactionManager(appContext.getBean(USER_DATASOURCE_BEAN, DataSource.class));
+	}
+
 	
 	/** For swagger-ui **/
 	@Bean
