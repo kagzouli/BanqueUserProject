@@ -1,16 +1,24 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
+import { PocComponent } from './form/test/poc/poc.component';
+
+import { BanqueService } from './services/banque/banque.service';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PocComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [BanqueService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

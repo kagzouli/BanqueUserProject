@@ -1,0 +1,25 @@
+<div>
+  <form [formGroup] = "rForm" (ngSubmit)="creditAccountController(rForm.value)">
+    <div class="form-container">
+      <div class="row columns">
+        <h1>Credit account</h1>
+        <label>identifier User
+          <input type="text"  (ngModelChange)="changeIdentifierUser(oldvalue, newvalue =$event)" formControlName="identifierUser" />
+        </label>
+        <br/>
+
+        <label>Label operation
+          <input text="text" formControlName="labelOperation" />
+        </label>
+        <br/>
+        
+         <label>Amount
+          <input text="number"  formControlName="amount"/>
+        </label>
+        <br/>      
+        <label for="validate">Minimum of 3 Characters</label>
+        <input type="submit" class="button expanded" value="Submit Form" [disabled]="!rForm.valid">
+      </div>
+    </div>
+  </form>
+</div>
