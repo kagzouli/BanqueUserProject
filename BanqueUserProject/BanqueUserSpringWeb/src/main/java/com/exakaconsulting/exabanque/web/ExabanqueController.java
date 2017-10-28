@@ -35,7 +35,12 @@ import com.exakaconsulting.exabanque.service.IExauserService;
 import com.exakaconsulting.exabanque.service.JsonResult;
 import com.exakaconsulting.exabanque.service.OperationUserParam;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
+@Api(value = "/", description = "This REST API is use to make actions on exabanque.<br/>")
 public class ExabanqueController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExabanqueController.class);
@@ -54,15 +59,15 @@ public class ExabanqueController {
 	/** REST list operations **/
 	static final String LIST_OPERATION_REST = "/listOperations";
 
-	
+
 	@Autowired
 	private IExabanqueService exabanqueService;
 	
 	@Autowired
 	private IExauserService exauserService;
 	
-	
-	@RequestMapping(value = "/exabanque", method = { RequestMethod.POST, RequestMethod.GET })
+	@ApiOperation(value = "This method is use to retrieve the home of the exabank", response = ModelAndView.class)
+	@RequestMapping(value = "/exabanque", method = {RequestMethod.GET })
 	public ModelAndView home() {
 		ModelAndView modelView = new ModelAndView("exabanque-jsp/exabanqueHomePage");
 
@@ -73,12 +78,12 @@ public class ExabanqueController {
 	}
 
 	
-	
-	@RequestMapping(value = BALANCE_USER_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+	@ApiOperation(value = "This method is to retrieve the balance of a user in the exabanque", response = JsonResult.class , notes="JsonResult of BigDecimal")
+	@RequestMapping(value = BALANCE_USER_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public  JsonResult<BigDecimal> retrieveBalanceAccountUser(
-			@RequestParam(name = "userIdentifier", required = true) final String userIdentifier) {
+			@ApiParam(value = "The user identifier to get the balance", required=true) @RequestParam(name = "userIdentifier", required = true) final String userIdentifier) {
 
 		LOGGER.info("BEGIN of the method debitAccount of the class " + ExabanqueController.class.getName() + " ( userIdentifier = " + userIdentifier + " ) ");
 		
@@ -99,8 +104,9 @@ public class ExabanqueController {
 		return jsonResult;
 	}
 	
-	
-	@RequestMapping(value = USERS_LIST_REST, method = { RequestMethod.GET, RequestMethod.POST }, produces = {
+
+	@ApiOperation(value = "This method is use to get the list of users in the exabanque", response = ExaUserBean.class , responseContainer="List")
+	@RequestMapping(value = USERS_LIST_REST, method = { RequestMethod.GET }, produces = {
 			MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	public List<ExaUserBean> retrieveUsersMap() {
@@ -119,11 +125,12 @@ public class ExabanqueController {
 		return usersList;
 	}
 	
-	
-	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.GET, RequestMethod.POST }, consumes = {
+
+	@ApiOperation(value = "This method is use to get the list of account operations of a user in the exabanque using some inputs", response = ExaAccountOperationBean.class , responseContainer="List")
+	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.GET }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	public List<ExaAccountOperationBean> listOperations(@RequestBody final AccountOperationStateParam accountOperationStateParam) throws UserExaBanqueNotFoundException  {
+	public List<ExaAccountOperationBean> listOperations(@ApiParam(value="The account operations to search") @RequestBody(required=true) final AccountOperationStateParam accountOperationStateParam) throws UserExaBanqueNotFoundException  {
 		
 		accountOperationStateParam.setBeginDate(this.changeHourMinSecDate(accountOperationStateParam.getBeginDate(), 0, 0, 0));
 		accountOperationStateParam.setEndDate(this.changeHourMinSecDate(accountOperationStateParam.getEndDate(), 23, 59, 59));
@@ -159,10 +166,11 @@ public class ExabanqueController {
 	 * credit Account for user.<br/>
 	 * 
 	 */
+	@ApiOperation(value = "This method is to credit a amount to an user account", response = JsonResult.class)
 	@RequestMapping(value = CREDIT_ACCOUNT_REST, method = { RequestMethod.POST }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	public JsonResult<Object> creditAccount(@RequestBody final OperationUserParam operationUserParam) {
+	public JsonResult<Object> creditAccount(@ApiParam(value="The account operation to credit for the user.", required=true) @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method creditAccount of the class " + ExabanqueController.class.getName()
 				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
@@ -188,10 +196,11 @@ public class ExabanqueController {
 		return jsonResult;
 	}
 
+	@ApiOperation(value = "This method is to debit a amount to an user account", response = JsonResult.class)
 	@RequestMapping(value = DEBIT_ACCOUNT_REST, method = { RequestMethod.POST }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	public JsonResult<BigDecimal> debitAccount(@RequestBody final OperationUserParam operationUserParam) {
+	public JsonResult<BigDecimal> debitAccount(@ApiParam(value="The account operation to credit for the user.", required=true) @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method debitAccount of the class " + ExabanqueController.class.getName()
 				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "

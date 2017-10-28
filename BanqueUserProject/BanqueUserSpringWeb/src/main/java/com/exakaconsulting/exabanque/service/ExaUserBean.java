@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ExaUserBean implements Serializable{
 
 	
@@ -14,12 +16,16 @@ public class ExaUserBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@ApiModelProperty(value="The identifier code user.", required=true)
 	protected String identifierCodeUser;
 	
+	@ApiModelProperty(value="The first name user.", required=true)
 	protected String firstName;
 	
+	@ApiModelProperty(value="The last name user.", required=true)
 	protected String lastName;
 	
+	@ApiModelProperty(value="The entire name user.")
 	protected String entireName;
 	
 	@JsonIgnore

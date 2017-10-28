@@ -97,7 +97,7 @@ public class BanqueController {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager')")
-	public JsonResult<Object> creditAccount(@ApiParam(value="The credit operation on account") @RequestBody final OperationUserParam operationUserParam) {
+	public JsonResult<Object> creditAccount(@ApiParam(value="The credit operation on account") @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method creditAccount of the class " + BanqueController.class.getName()
 				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
@@ -129,7 +129,7 @@ public class BanqueController {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager')")
-	public JsonResult<BigDecimal> debitAccount(@ApiParam(value="The debit operation on account")  @RequestBody final OperationUserParam operationUserParam) {
+	public JsonResult<BigDecimal> debitAccount(@ApiParam(value="The debit operation on account")  @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method debitAccount of the class " + BanqueController.class.getName()
 				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
