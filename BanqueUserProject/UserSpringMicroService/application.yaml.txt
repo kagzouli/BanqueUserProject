@@ -1,0 +1,39 @@
+spring: 
+   application:
+    name: user-service
+   mvc:
+    view:
+      prefix: /
+      suffix: .jsp 
+   jmx:
+     default-domain: userMicroService
+     enabled: false 
+ 
+endpoints:
+    jmx:
+      domain: userMicroService
+  
+
+server:
+    port: ${PORT:12090}
+    ssl:
+      key-store: classpath:userservice.jks
+      key-store-password: password
+      keyStoreType: JKS
+      keyAlias: userservice
+ 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:20000/eureka/
+  instance:
+    securePort: 12090
+    securePortEnabled: true
+    nonSecurePortEnabled: false
+    leaseRenewalIntervalInSeconds: 10
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${server.port}:${random.value}}
+    statusPageUrl: /userMicroService/info
+    healthCheckUrl: /userMicroService/health
+    homePageUrl: /userMicroService/
+ 
