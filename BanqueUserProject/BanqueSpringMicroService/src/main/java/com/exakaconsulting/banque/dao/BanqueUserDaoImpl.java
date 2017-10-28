@@ -28,7 +28,7 @@ import com.exakaconsulting.banque.service.UserBanqueNotFoundException;
 @Repository
 public class BanqueUserDaoImpl implements IBanqueUserDao {
 
-	private static final String URL_USER_BY_CODE = "https://user-service/userByCode";
+	private static final String URL_USER_BY_CODE = "http://user-service/userByCode";
 
 	private static final String USERNAME = "banque";
 
@@ -57,7 +57,7 @@ public class BanqueUserDaoImpl implements IBanqueUserDao {
 		BanqueUserBean user = null;
 		try {
 			final ResponseEntity<JsonBanqueUserResult> entityJsonResult = restTemplate.exchange(URL_USER_BY_CODE,
-					HttpMethod.POST, entity, JsonBanqueUserResult.class);
+					HttpMethod.GET, entity, JsonBanqueUserResult.class);
 
 			if (entityJsonResult == null || entityJsonResult.getBody() == null
 					|| !entityJsonResult.getBody().isSuccess()) {

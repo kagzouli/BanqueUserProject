@@ -1,9 +1,10 @@
 package com.exakaconsulting;
 
+import static com.exakaconsulting.IConstantApplication.BANQUE_DATASOURCE_BEAN;
+import static com.exakaconsulting.IConstantApplication.REST_TEMPLATE_BEAN;
+import static com.exakaconsulting.IConstantApplication.TRANSACTIONAL_BANQUE_BEAN;
+
 import javax.sql.DataSource;
-
-import static com.exakaconsulting.IConstantApplication.*; 
-
 
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
@@ -112,7 +113,6 @@ public class BanqueApplication {
 				/*.paths(PathSelectors.regex("/*"))*/
 				.build();
 	}
-
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(BanqueApplication.class, args);

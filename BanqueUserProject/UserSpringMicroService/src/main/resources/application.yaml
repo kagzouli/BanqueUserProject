@@ -16,11 +16,6 @@ endpoints:
 
 server:
     port: ${PORT:12090}
-    ssl:
-      key-store: classpath:userservice.jks
-      key-store-password: userservice
-      keyStoreType: JKS
-      keyAlias: userservice
  
 eureka:
   client:
