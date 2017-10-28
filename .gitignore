@@ -21,7 +21,11 @@
 *.rar
 *.tar
 *.zip
+*.classpath
+*.settings
+*.project
 target/
+.recommenders/
 
 # Logs and databases #
 
