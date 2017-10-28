@@ -26,6 +26,7 @@
 *.project
 target/
 .recommenders/
+.metadata/
 
 # Logs and databases #
 
