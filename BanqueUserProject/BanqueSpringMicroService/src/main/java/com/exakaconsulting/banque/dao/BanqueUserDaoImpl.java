@@ -17,10 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.exakaconsulting.banque.service.BanqueUserBean;
 import com.exakaconsulting.banque.service.UserBanqueNotFoundException;
@@ -45,24 +45,21 @@ public class BanqueUserDaoImpl implements IBanqueUserDao {
 
 		Assert.hasLength(userIdentifier, "userIdentifier must be set");
 
-		// Get the user.
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("userCode", userIdentifier);
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.set("Authorization", this.stringSecurity());
 		// set your entity to send
-		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(headers);
 
 		BanqueUserBean user = null;
 		try {
-			final ResponseEntity<BanqueUserBean> entityBanqueUser = restTemplate.exchange(URL_USER_BY_CODE,
+			UriComponentsBuilder urlBuilder = UriComponentsBuilder.fromHttpUrl(URL_USER_BY_CODE)
+			        .queryParam("userCode", userIdentifier);
+	
+			
+			final ResponseEntity<BanqueUserBean> entityBanqueUser = restTemplate.exchange(urlBuilder.build().encode().toUri(), 
 					HttpMethod.GET, entity, BanqueUserBean.class);
 			
-			restTemplate.exchange("/userslist",
-					HttpMethod.GET, entity, String.class);
-
 			if (entityBanqueUser == null || entityBanqueUser.getBody() == null) {
 				throw new UserBanqueNotFoundException(USER_NOT_FOUND_EXCEPTION);
 			}
