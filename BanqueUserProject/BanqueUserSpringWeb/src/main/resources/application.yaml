@@ -10,7 +10,7 @@ spring:
 
 server:
     port: 25000
-    contextPath: /exa
+    contextPath: /
 
 eureka:
   client:
