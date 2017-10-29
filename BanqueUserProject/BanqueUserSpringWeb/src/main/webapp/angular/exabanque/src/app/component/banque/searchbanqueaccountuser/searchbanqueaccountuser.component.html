@@ -21,11 +21,24 @@
   </form>
   
   <br/>
-  <hr/>
-  <br/>
   
-  <ul>
-     <li *ngFor="let item of listAccountOperation" appBold>{{listAccountOperation.userIdentifier}} // {{listAccountOperation.label}} // {{listAccountOperation.amount}} // {{listAccountOperation.operationType}} // {{listAccountOperation.operationDate}}</li>
-  </ul>
+  <ag-grid-angular style="height: 525px; width: 900px;" class="ag-fresh"
+
+                 [gridOptions]="gridOptions"
+                 [columnDefs]="columnDefs"
+                 [rowData]="listAccountOperation"
+
+                 enableColResize
+                 enableSorting
+                 enableFilter
+                 groupHeaders
+                 suppressRowClickSelection
+                 toolPanelSuppressGroups
+                 toolPanelSuppressValues
+                 rowHeight="22"
+                 rowSelection="multiple"
+
+                 (gridReady)="onReady($event)">
+	</ag-grid-angular>
   
 </div>

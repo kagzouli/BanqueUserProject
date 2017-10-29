@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import {ColumnApi, GridApi, GridOptions} from "ag-grid/main";
+
 import {ExaAccountOperation} from '../../../services/banque/exaaccountoperation';
 import {SearchAccountOperation} from '../../../services/banque/searchaccountoperationparam';
 
 import { BanqueService } from '../../../services/banque/banque.service';
+
 
 @Component({
   selector: 'app-searchbanqueaccountuser',
@@ -16,7 +19,10 @@ export class SearchbanqueaccountuserComponent implements OnInit {
 
   rForm: FormGroup;
   
-  listAccountOperation: ExaAccountOperation[];
+  listAccountOperation: ExaAccountOperation[] = [];
+  
+  private gridOptions: GridOptions;
+  public columnDefs: any[];
 
 
   constructor(private fb: FormBuilder, private banqueService: BanqueService) {
@@ -25,15 +31,15 @@ export class SearchbanqueaccountuserComponent implements OnInit {
       'beginDate' : [null /*, Validators.compose([Validators.]) */],
       'endDate' : [null /*,  Validators.compose([Validators.required])*/],
     });
+     this.gridOptions = <GridOptions>{};
+    
+    this.columnDefs = this.createColumnDefs();
    }
 
   ngOnInit() {
   }
 
   searchaccountoperation(form) {
-      console.log('Identifier user : ' + form.identifierUser);
-      console.log('Begin date : ' + form.beginDate);
-      console.log('End date : ' + form.endDate);
     
       // Convert begin date to ISO8601
       let beginDateIso8601 : Date;
@@ -63,9 +69,33 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          // Invalid data on form - we reset.
          this.rForm.reset();
      }
-    
-    
-
   }
+  
+  
+    private createColumnDefs() {
+        const columnDefs = [
+            {
+                headerName: 'Label operation',
+                width: 150,
+                field: 'label'
+            },
+            {
+                headerName: 'Amount',
+                width: 100,
+                field: 'amount'
+            },
+            {
+                headerName: 'operation Type',
+                width: 100,
+                field: 'operationType'
+            },
+            {
+                headerName: 'operation Date',
+                width: 100,
+                field: 'operationDate'
+            }
+        ];
 
+        return columnDefs;
+    }
 }
