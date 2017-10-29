@@ -1,4 +1,3 @@
-<div class="searchblock">
   <form [formGroup] = "rForm" (ngSubmit)="searchaccountoperation(rForm.value)">
     <div class="form-container">
       <div class="row columns">
@@ -20,25 +19,10 @@
     </div>
   </form>
   
-  <br/>
-  
-  <ag-grid-angular style="height: 525px; width: 900px;" class="ag-fresh"
-
+<ag-grid-angular style="height: 525px; width: 900px;" class="ag-fresh"
                  [gridOptions]="gridOptions"
                  [columnDefs]="columnDefs"
-                 [rowData]="listAccountOperation"
-
-                 enableColResize
-                 enableSorting
-                 enableFilter
-                 groupHeaders
-                 suppressRowClickSelection
-                 toolPanelSuppressGroups
-                 toolPanelSuppressValues
-                 rowHeight="22"
-                 rowSelection="multiple"
-
-                 (gridReady)="onReady($event)">
-	</ag-grid-angular>
+                 [rowData]="listAccountOperation" >
+                 
+</ag-grid-angular>
   
-</div>

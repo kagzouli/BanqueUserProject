@@ -47,7 +47,6 @@ export class UserbanquelistComponent implements OnInit {
 
     updateSelectedValue(event: string) {
        const valueSelected = event;
-       console.log(valueSelected);
        // this.rForm['identifierUser'] = value.key;
    }
 }
