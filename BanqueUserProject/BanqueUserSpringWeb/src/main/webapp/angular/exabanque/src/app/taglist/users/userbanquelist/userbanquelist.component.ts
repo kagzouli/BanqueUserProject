@@ -19,9 +19,13 @@ export class UserbanquelistComponent implements OnInit {
 
   mapUsers: StringMapEntry[] = [ ];
 
+  userChoose: any;
+
   constructor(private usersServices: UsersService) {}
 
   ngOnInit() {
+    this.userChoose = 'ROGFED';
+
     this.getMapAllUsers();
 
   }
@@ -37,11 +41,11 @@ export class UserbanquelistComponent implements OnInit {
             }
          }
         );
-       return this.mapUsers;
     }
 
     updateSelectedValue(event: StringMapEntry) {
-       console.log(event.key);
+       const valueSelected = event.key;
+       console.log(valueSelected);
        // this.rForm['identifierUser'] = value.key;
    }
 }
