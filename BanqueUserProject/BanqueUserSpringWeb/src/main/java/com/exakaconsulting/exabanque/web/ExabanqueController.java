@@ -173,7 +173,7 @@ public class ExabanqueController {
 	public JsonResult<Object> creditAccount(@ApiParam(value="The account operation to credit for the user.", required=true) @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method creditAccount of the class " + ExabanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		JsonResult<Object> jsonResult = new JsonResult<>();
@@ -190,7 +190,7 @@ public class ExabanqueController {
 		}
 
 		LOGGER.info("END of the method creditAccount of the class " + ExabanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		return jsonResult;
@@ -203,7 +203,7 @@ public class ExabanqueController {
 	public JsonResult<BigDecimal> debitAccount(@ApiParam(value="The account operation to credit for the user.", required=true) @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method debitAccount of the class " + ExabanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		JsonResult<BigDecimal> jsonResult = new JsonResult<>();
@@ -220,7 +220,7 @@ public class ExabanqueController {
 		}
 
 		LOGGER.info("END of the method debitAccount of the class " + ExabanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		return jsonResult;

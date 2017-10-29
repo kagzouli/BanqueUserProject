@@ -100,13 +100,13 @@ public class BanqueController {
 	public JsonResult<Object> creditAccount(@ApiParam(value="The credit operation on account") @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method creditAccount of the class " + BanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		JsonResult<Object> jsonResult = new JsonResult<>();
 
 		try {
-			banqueService.creditAmount(operationUserParam.getIdentifier(), operationUserParam.getLabelOperation(),
+			banqueService.creditAmount(operationUserParam.getIdentifierUser(), operationUserParam.getLabelOperation(),
 					operationUserParam.getAmount());
 			jsonResult.setSuccess(true);
 		} catch (UserBanqueNotFoundException | MaxAmountCreditException exception) {
@@ -118,7 +118,7 @@ public class BanqueController {
 		}
 
 		LOGGER.info("END of the method creditAccount of the class " + BanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		return jsonResult;
@@ -132,12 +132,12 @@ public class BanqueController {
 	public JsonResult<BigDecimal> debitAccount(@ApiParam(value="The debit operation on account")  @RequestBody(required=true) final OperationUserParam operationUserParam) {
 
 		LOGGER.info("BEGIN of the method debitAccount of the class " + BanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		JsonResult<BigDecimal> jsonResult = new JsonResult<>();
 		try {
-			final BigDecimal balanceAmount = banqueService.debitAmount(operationUserParam.getIdentifier(),
+			final BigDecimal balanceAmount = banqueService.debitAmount(operationUserParam.getIdentifierUser(),
 					operationUserParam.getLabelOperation(), operationUserParam.getAmount());
 			jsonResult.setResult(balanceAmount);
 			jsonResult.setSuccess(true);
@@ -150,7 +150,7 @@ public class BanqueController {
 		}
 
 		LOGGER.info("END of the method debitAccount of the class " + BanqueController.class.getName()
-				+ " ( userIdentifier = " + operationUserParam.getIdentifier() + " , labelOperation  = "
+				+ " ( userIdentifier = " + operationUserParam.getIdentifierUser() + " , labelOperation  = "
 				+ operationUserParam.getLabelOperation() + " )");
 
 		return jsonResult;

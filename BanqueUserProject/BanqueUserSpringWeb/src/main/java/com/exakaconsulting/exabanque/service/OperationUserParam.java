@@ -15,7 +15,7 @@ public class OperationUserParam implements Serializable{
 	private static final long serialVersionUID = 8019736073541044305L;
 
 	@ApiModelProperty(value="The user identifier to make the operation", required=true)
-	private String identifier;
+	private String identifierUser;
 
 	@ApiModelProperty(value="The label operation", required=true)
 	private String labelOperation;
@@ -23,14 +23,14 @@ public class OperationUserParam implements Serializable{
 	@ApiModelProperty(value="The amount of the operation", required=true)
 	private BigDecimal amount;
 	
-	public String getIdentifier() {
-		return identifier;
+	public String getIdentifierUser() {
+		return identifierUser;
 	}
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+	public void setIdentifierUser(String identifierUser) {
+		this.identifierUser = identifierUser;
 	}
-	
+
 	public String getLabelOperation() {
 		return labelOperation;
 	}

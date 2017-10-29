@@ -45,7 +45,6 @@ export class PocComponent implements OnInit {
   }
 
   changeIdentifierUser(oldvalue, newvalue) {
-    console.log('Old value : ' + oldvalue + '/ new value : ' + newvalue);
   }
 
 
