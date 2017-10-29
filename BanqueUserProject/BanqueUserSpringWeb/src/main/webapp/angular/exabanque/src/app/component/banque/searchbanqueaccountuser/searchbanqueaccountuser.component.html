@@ -1,0 +1,22 @@
+<div class="searchblock">
+  <form [formGroup] = "rForm" (ngSubmit)="searchaccountoperation(rForm.value)">
+    <div class="form-container">
+      <div class="row columns">
+        <h1>User</h1>
+        <app-userbanquelist [currentForm]="rForm"></app-userbanquelist>
+        <br/>
+
+        <label>Begin date
+          <input type="date" formControlName="beginDate" placeholder="dd/MM/yyyy" />
+        </label>
+        <br/>
+        
+         <label>End date
+          <input type="date"  formControlName="endDate" placeholder="dd/MM/yyyy"/>
+        </label>
+        <br/>      
+        <input type="submit" class="button expanded" value="Submit Form" [disabled]="!rForm.valid">
+      </div>
+    </div>
+  </form>
+</div>

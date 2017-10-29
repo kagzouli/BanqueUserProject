@@ -20,7 +20,7 @@ export class UserbanquelistComponent implements OnInit {
 
   mapUsers: StringMapEntry[] = [ ];
 
-  userChoose: string;
+  userChoose: string = '';
 
   @Input() currentForm: FormGroup;
   @Input('fieldToChange') fieldToChange: string;

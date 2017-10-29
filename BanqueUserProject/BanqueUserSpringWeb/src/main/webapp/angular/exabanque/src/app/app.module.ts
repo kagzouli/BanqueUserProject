@@ -6,13 +6,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { PocComponent } from './form/test/poc/poc.component';
 import { UserbanquelistComponent } from './taglist/users/userbanquelist/userbanquelist.component';
+import { SearchbanqueaccountuserComponent } from './component/banque/searchbanqueaccountuser/searchbanqueaccountuser.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     PocComponent,
-    UserbanquelistComponent
+    UserbanquelistComponent,
+    SearchbanqueaccountuserComponent
   ],
   imports: [
     BrowserModule,
