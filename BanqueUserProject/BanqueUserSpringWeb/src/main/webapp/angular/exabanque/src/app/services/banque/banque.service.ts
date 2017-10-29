@@ -6,6 +6,7 @@ import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Observable';
 
 import {AccountNumberOperation} from './accountnumberoperation';
+import {JsonResult} from '../jsonresult';
 import { HttpClient , HttpHeaders} from '@angular/common/http';
 
 
@@ -14,36 +15,21 @@ export class BanqueService {
 
   constructor( private http: HttpClient) { }
 
-  creditAccountNumber(accountNumberOperation: AccountNumberOperation) {
+  creditAccountNumber(accountNumberOperation: AccountNumberOperation, callback: (jsonResult: JsonResult) => void) {
 
     /*  this.http.get('http://localhost:25000/usersList')
       .map((res: Response) => res.json()).subscribe((data) => console.log(data)); */
 
      const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-
-     this.http.post('http://localhost:25000/creditAccount', JSON.stringify(accountNumberOperation), {headers: headers})
+     this.http.post<JsonResult>('http://localhost:25000/creditAccount', JSON.stringify(accountNumberOperation), {headers: headers})
        .subscribe(
         res => {
-          console.log(res);
+          callback(res);
         },
         err => {
           console.log('Error occured --> ' + err);
         }
       );
-    /*   .map((response: Response) => {
-            // login successful if there's a jwt token in the response
-            const token = response.json() && response.json().token;
-            console.log(response);
-        });*/
-     /* .catch((error: any) => {
-        console.log(error);
-      return Observable.throw(error.json()); }); */
-   // this.http.post(endPoint,)
-
-   // this.jsonp.put(endPoint, { search: params })
-     //         .map(response => <Animal[]> response.json().petfinder.pets.pet);
-
-
-  }
+   }
 
 }

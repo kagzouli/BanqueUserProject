@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import {AccountNumberOperation} from '../../../services/banque/accountnumberoperation';
+import {JsonResult} from '../../../services/jsonresult';
+
 
 import { BanqueService } from '../../../services/banque/banque.service';
 
@@ -34,7 +36,19 @@ export class PocComponent implements OnInit {
 
     // Call the service crediting bank
      if (this.rForm.valid) {
-         this.banqueService.creditAccountNumber(accountOperation);
+         // Method of callback to credit account number
+         this.banqueService.creditAccountNumber(accountOperation,
+         (jsonResult: JsonResult) => {
+             const success = jsonResult.success;
+             if (success) {
+                window.alert('The account of \'' + accountOperation.identifierUser + '\' has been credit with success');
+             }else {
+                window.alert('The application has face a technical error.');
+             }
+
+           }
+         );
+
     }else {
          // Invalid data on form - we reset.
          this.rForm.reset();
