@@ -48,7 +48,7 @@ export class BanqueService {
    */  
    findAllAccountOperation(searchaccountOperationParam: SearchAccountOperation, callback: (listAccountOperations: ExaAccountOperation[]) => void){
         const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-        this.http.post<ExaAccountOperation[]>(this.contextUserServiceUrl + '/listOperations', JSON.stringify(searchaccountOperationParam), {headers: headers})
+        this.http.post<ExaAccountOperation[]>(this.contextUserServiceUrl + '/listOperations', searchaccountOperationParam, {headers: headers})
        .subscribe(
         res => {
           callback(res);

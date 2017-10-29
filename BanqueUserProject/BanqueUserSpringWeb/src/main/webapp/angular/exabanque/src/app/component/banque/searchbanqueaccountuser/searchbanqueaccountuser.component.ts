@@ -35,7 +35,19 @@ export class SearchbanqueaccountuserComponent implements OnInit {
       console.log('Begin date : ' + form.beginDate);
       console.log('End date : ' + form.endDate);
     
-      const searchAccountOperation: SearchAccountOperation = new SearchAccountOperation(form.identifierUser, form.beginDate, form.endDate);
+      // Convert begin date to ISO8601
+      let beginDateIso8601 : Date;
+      let endDateIso8601 : Date;
+      if (form.beginDate != null){
+         beginDateIso8601 =  new Date(new Date(form.beginDate).toISOString());
+      }
+    
+      if (form.endDate != null){
+        endDateIso8601 =  new Date(new Date(form.endDate).toISOString());
+      }
+       
+    
+      const searchAccountOperation: SearchAccountOperation = new SearchAccountOperation(form.identifierUser, beginDateIso8601, endDateIso8601);
     
         // Call the search accountoperations if valid
       if (this.rForm.valid) {
