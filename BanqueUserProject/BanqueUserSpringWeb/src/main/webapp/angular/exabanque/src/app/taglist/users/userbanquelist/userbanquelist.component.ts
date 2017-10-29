@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Input } from '@angular/core';
 
 import { UsersService } from '../../../services/users/users.service';
 
 import {UserLightBean} from '../../../services/users/userlightbean';
 
 import {StringMapEntry} from '../../../services/stringmapentry';
+import { FormGroup } from '@angular/forms';
 
 
 
@@ -19,13 +20,14 @@ export class UserbanquelistComponent implements OnInit {
 
   mapUsers: StringMapEntry[] = [ ];
 
-  userChoose: any;
+  userChoose: string;
+
+  @Input() currentForm: FormGroup;
+  @Input('fieldToChange') fieldToChange: string;
 
   constructor(private usersServices: UsersService) {}
 
   ngOnInit() {
-    this.userChoose = 'ROGFED';
-
     this.getMapAllUsers();
 
   }
@@ -43,8 +45,8 @@ export class UserbanquelistComponent implements OnInit {
         );
     }
 
-    updateSelectedValue(event: StringMapEntry) {
-       const valueSelected = event.key;
+    updateSelectedValue(event: string) {
+       const valueSelected = event;
        console.log(valueSelected);
        // this.rForm['identifierUser'] = value.key;
    }

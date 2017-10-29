@@ -15,6 +15,7 @@ import { BanqueService } from '../../../services/banque/banque.service';
 })
 export class PocComponent implements OnInit {
   rForm: FormGroup;
+  identifierUserCste = 'identifierUser';
   post: any;
   constructor(private fb: FormBuilder, private banqueService: BanqueService) {
     this.rForm = fb.group({

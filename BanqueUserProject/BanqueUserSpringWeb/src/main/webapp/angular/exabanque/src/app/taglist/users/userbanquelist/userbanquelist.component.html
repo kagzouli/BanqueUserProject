@@ -1,7 +1,9 @@
+<div [formGroup]="currentForm">
 <label>identifier User
-  <select  [(ngModel)]="userChoose" (ngModelChange)="updateSelectedValue($event)">
- 	  <option *ngFor="let user of mapUsers" [ngValue]="user">{{user.value}}</option>	  
+  <select formControlName="identifierUser" [(ngModel)]="userChoose" (ngModelChange)="updateSelectedValue($event)">
+ 	  <option *ngFor="let user of mapUsers" [ngValue]="user.key">{{user.value}}</option>	  
   </select>
 </label>
+</div>
   
   
