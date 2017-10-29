@@ -57,9 +57,4 @@ export class PocComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  changeIdentifierUser(oldvalue, newvalue) {
-  }
-
-
 }

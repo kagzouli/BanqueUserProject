@@ -18,24 +18,27 @@ export class UserbanquelistComponent implements OnInit {
 
   namecomponent: string;
 
-  mapUsers: StringMapEntry[] = [];
+  mapUsers: StringMapEntry[] = [ ];
 
-  constructor(private usersServices: UsersService) { }
+  constructor(private usersServices: UsersService) {}
 
   ngOnInit() {
     this.getMapAllUsers();
+
   }
 
   getMapAllUsers() {
 
       this.usersServices.getAllBanqueUsers(
          (usersLightBean: UserLightBean[]) => {
+           this.mapUsers = [];
             for (const userLightBean of usersLightBean){
                const realName = userLightBean.lastName + ' ' + userLightBean.firstName;
-               this.mapUsers.push(new StringMapEntry(userLightBean.identifierCodeUser, realName));
+               this.mapUsers.push(new StringMapEntry(userLightBean.identifierCodeUser.toString(), realName));
             }
          }
         );
+       return this.mapUsers;
 
   }
 }

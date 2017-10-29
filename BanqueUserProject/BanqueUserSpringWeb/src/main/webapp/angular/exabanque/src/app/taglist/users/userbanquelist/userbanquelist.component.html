@@ -1,6 +1,7 @@
 <label>identifier User
-  <select name="{{nameComponent}}">
-      <option value=""> Define your choice</option>
-	  <option ngFor="let userbanque of listUsersBanque" value="{{userbanque.key}}">{{userbanque.value}}</option>
+  <select name="{{nameComponent}}"  [(ngModel)]="mapUsers" (ngModelChange)="onChange($event)">
+ 	  <option *ngFor="let user of mapUsers" [ngValue]="user.key">{{user.value}}</option>
   </select>
 </label>
+  
+  
