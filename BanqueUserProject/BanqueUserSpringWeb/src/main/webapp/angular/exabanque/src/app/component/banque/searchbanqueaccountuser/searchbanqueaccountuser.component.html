@@ -19,4 +19,13 @@
       </div>
     </div>
   </form>
+  
+  <br/>
+  <hr/>
+  <br/>
+  
+  <ul>
+     <li *ngFor="let item of listAccountOperation" appBold>{{listAccountOperation.userIdentifier}} // {{listAccountOperation.label}} // {{listAccountOperation.amount}} // {{listAccountOperation.operationType}} // {{listAccountOperation.operationDate}}</li>
+  </ul>
+  
 </div>
