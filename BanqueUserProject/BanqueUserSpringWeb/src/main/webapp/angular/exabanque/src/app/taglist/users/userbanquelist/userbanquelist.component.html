@@ -1,6 +1,6 @@
 <label>identifier User
-  <select name="{{nameComponent}}"  [(ngModel)]="mapUsers" (ngModelChange)="onChange($event)">
- 	  <option *ngFor="let user of mapUsers" [ngValue]="user.key">{{user.value}}</option>
+  <select  [(ngModel)]="mapUsers" (ngModelChange)="updateSelectedValue($event)">
+ 	  <option *ngFor="let user of mapUsers" [value]="user">{{user.value}}</option>	  
   </select>
 </label>
   

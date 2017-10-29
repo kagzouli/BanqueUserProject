@@ -16,7 +16,6 @@ import {StringMapEntry} from '../../../services/stringmapentry';
 })
 export class UserbanquelistComponent implements OnInit {
 
-  namecomponent: string;
 
   mapUsers: StringMapEntry[] = [ ];
 
@@ -31,7 +30,7 @@ export class UserbanquelistComponent implements OnInit {
 
       this.usersServices.getAllBanqueUsers(
          (usersLightBean: UserLightBean[]) => {
-           this.mapUsers = [];
+           this.mapUsers = [new StringMapEntry('', 'Define your choice here')];
             for (const userLightBean of usersLightBean){
                const realName = userLightBean.lastName + ' ' + userLightBean.firstName;
                this.mapUsers.push(new StringMapEntry(userLightBean.identifierCodeUser.toString(), realName));
@@ -39,6 +38,10 @@ export class UserbanquelistComponent implements OnInit {
          }
         );
        return this.mapUsers;
+    }
 
-  }
+    updateSelectedValue(event: StringMapEntry) {
+       console.log(event.key);
+       // this.rForm['identifierUser'] = value.key;
+   }
 }

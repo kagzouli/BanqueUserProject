@@ -18,7 +18,7 @@ export class PocComponent implements OnInit {
   post: any;
   constructor(private fb: FormBuilder, private banqueService: BanqueService) {
     this.rForm = fb.group({
-      'identifierUser' : [null, Validators.compose([Validators.required, Validators.maxLength(32)])],
+      'identifierUser' : [null, Validators.compose([Validators.required])],
       'labelOperation' : [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(150)])],
       'amount' : [null,  Validators.compose([Validators.required, Validators.pattern('^\\d+\\.?\\d{0,2}$')])]
     });
@@ -57,4 +57,6 @@ export class PocComponent implements OnInit {
 
   ngOnInit() {
   }
+
+
 }
