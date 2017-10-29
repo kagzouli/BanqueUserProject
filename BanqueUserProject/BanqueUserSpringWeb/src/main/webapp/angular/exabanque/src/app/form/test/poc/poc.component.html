@@ -3,9 +3,7 @@
     <div class="form-container">
       <div class="row columns">
         <h1>Credit account</h1>
-        <label>identifier User
-          <input type="text"  (ngModelChange)="changeIdentifierUser(oldvalue, newvalue =$event)" formControlName="identifierUser" />
-        </label>
+        <app-userbanquelist [nameComponent] = "identifierUser" ></app-userbanquelist>
         <br/>
 
         <label>Label operation

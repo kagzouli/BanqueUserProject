@@ -12,4 +12,5 @@ export class JsonResult {
 
   constructor() {
   }
+
 }

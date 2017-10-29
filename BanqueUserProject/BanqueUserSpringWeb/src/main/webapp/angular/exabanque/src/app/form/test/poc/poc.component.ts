@@ -41,7 +41,7 @@ export class PocComponent implements OnInit {
          (jsonResult: JsonResult) => {
              const success = jsonResult.success;
              if (success) {
-                window.alert('The account of \'' + accountOperation.identifierUser + '\' has been credit with success');
+                window.alert('The account of the user has been credit with success');
              }else {
                 window.alert('The application has face a technical error.');
              }
