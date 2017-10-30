@@ -27,7 +27,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
 
   rForm: FormGroup;
   
-  displayedColumns = ['operation Date', 'label', 'Operation type', 'Amount'];
+  displayedColumns = ['operationDate', 'label', 'operationType', 'amount'];
    
   listAccountOperation: ExaAccountOperation[] = [];
   
