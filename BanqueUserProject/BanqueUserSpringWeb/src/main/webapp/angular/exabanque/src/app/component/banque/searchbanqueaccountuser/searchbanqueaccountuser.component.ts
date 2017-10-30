@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import {ExaAccountOperation} from '../../../services/banque/exaaccountoperation';
@@ -34,7 +34,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   dataSource = new ExabanqueDataSource(this);
   
 
-  constructor(private fb: FormBuilder, private banqueService: BanqueService) {
+  constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef) {
        this.rForm = fb.group({
        'identifierUser' : [null, Validators.compose([Validators.required])],
       'beginDate' : [null /*, Validators.compose([Validators.]) */],
@@ -67,6 +67,8 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          this.banqueService.findAllAccountOperation(searchAccountOperation,
          (listAccountOperation: ExaAccountOperation[]) => {
              this.listAccountOperation = listAccountOperation;
+             this.dataSource = new ExabanqueDataSource(this);
+             this.changeDetectorRefs.detectChanges();
            }
          );
 
