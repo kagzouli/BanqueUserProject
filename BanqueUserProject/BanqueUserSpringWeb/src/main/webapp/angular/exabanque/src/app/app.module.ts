@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import {MatTableModule} from '@angular/material';
 
-import {AgGridModule} from 'ag-grid-angular/main';
 
 import { AppComponent } from './app.component';
 import { PocComponent } from './form/test/poc/poc.component';
@@ -23,7 +23,7 @@ import { SearchbanqueaccountuserComponent } from './component/banque/searchbanqu
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AgGridModule.withComponents([])
+    MatTableModule
     
   ],
   providers: [],

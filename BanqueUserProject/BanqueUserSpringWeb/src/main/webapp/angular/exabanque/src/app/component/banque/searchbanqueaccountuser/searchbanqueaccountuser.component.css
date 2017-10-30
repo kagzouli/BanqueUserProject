@@ -1,16 +1,19 @@
-.toolbar button {
-    margin: 2px; padding: 0;
+/* Structure */
+searchbanqueaccount-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
 }
 
-.ag-cell {
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+.searchbanqueaccount-header {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  font-size: 20px;
 }
 
-label {
-    font-weight: normal !important;
-}
-
-.ag-menu {
-    z-index: 50;
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
 }

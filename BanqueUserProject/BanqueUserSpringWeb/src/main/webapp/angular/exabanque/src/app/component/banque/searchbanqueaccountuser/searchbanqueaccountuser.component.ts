@@ -1,12 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-import {ColumnApi, GridApi, GridOptions} from "ag-grid/main";
 
 import {ExaAccountOperation} from '../../../services/banque/exaaccountoperation';
 import {SearchAccountOperation} from '../../../services/banque/searchaccountoperationparam';
 
+
 import { BanqueService } from '../../../services/banque/banque.service';
+
+import {DataSource} from '@angular/cdk/collections';
+import {MatPaginator} from '@angular/material';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/map';
 
 
 @Component({
@@ -19,11 +27,12 @@ export class SearchbanqueaccountuserComponent implements OnInit {
 
   rForm: FormGroup;
   
+  displayedColumns = ['operation Date', 'label', 'Operation type', 'Amount'];
+   
   listAccountOperation: ExaAccountOperation[] = [];
   
-  private gridOptions: GridOptions;
-  public columnDefs: any[];
-
+  dataSource = new ExabanqueDataSource(this);
+  
 
   constructor(private fb: FormBuilder, private banqueService: BanqueService) {
        this.rForm = fb.group({
@@ -31,9 +40,6 @@ export class SearchbanqueaccountuserComponent implements OnInit {
       'beginDate' : [null /*, Validators.compose([Validators.]) */],
       'endDate' : [null /*,  Validators.compose([Validators.required])*/],
     });
-     this.gridOptions = <GridOptions>{};
-    
-    this.columnDefs = this.createColumnDefs();
    }
 
   ngOnInit() {
@@ -69,33 +75,26 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          // Invalid data on form - we reset.
          this.rForm.reset();
      }
+  } 
+ }
+
+/**
+ * Data source to provide what data should be rendered in the table. The observable provided
+ * in connect should emit exactly the data that should be rendered by the table. If the data is
+ * altered, the observable should emit that new set of data on the stream. In our case here,
+ * we return a stream that contains only one set of data that doesn't change.
+ */
+export class ExabanqueDataSource extends DataSource<any> {
+  
+   constructor(private _searchbanqueaccount: SearchbanqueaccountuserComponent) {
+    super();
   }
   
   
-    private createColumnDefs() {
-        const columnDefs = [
-            {
-                headerName: 'Label operation',
-                width: 150,
-                field: 'label'
-            },
-            {
-                headerName: 'Amount',
-                width: 100,
-                field: 'amount'
-            },
-            {
-                headerName: 'operation Type',
-                width: 100,
-                field: 'operationType'
-            },
-            {
-                headerName: 'operation Date',
-                width: 100,
-                field: 'operationDate'
-            }
-        ];
+  /** Connect function called by the table to retrieve one stream containing the data to render. */
+  connect(): Observable<ExaAccountOperation[]> {
+    return Observable.of(this._searchbanqueaccount.listAccountOperation);
+  }
 
-        return columnDefs;
-    }
+  disconnect() {}
 }
