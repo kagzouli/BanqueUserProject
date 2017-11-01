@@ -7,15 +7,14 @@
         <br/>
 
         <label>Label operation
-          <input text="text" formControlName="labelOperation" />
+          <input type="text" formControlName="labelOperation" />
         </label>
         <br/>
         
          <label>Amount
-          <input text="number"  formControlName="amount"/>
+          <input type="number"  formControlName="amount"/>
         </label>
         <br/>      
-        <label for="validate">Minimum of 3 Characters</label>
         <input type="submit" class="button expanded" value="Submit Form" [disabled]="!rForm.valid">
       </div>
     </div>

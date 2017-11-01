@@ -39,6 +39,9 @@ export class CreditBanqueAccountUser implements OnInit {
 
     // Call the service crediting bank
      if (this.rForm.valid) {
+       //Before the credit disable the button.
+       
+        this.rForm.disable();
          // Method of callback to credit account number
          this.banqueService.creditAccountNumber(accountOperation,
          (jsonResult: JsonResult) => {
@@ -52,6 +55,9 @@ export class CreditBanqueAccountUser implements OnInit {
 
            }
          );
+
+         //After finishing enable the form
+         this.rForm.enable();
          
 
     }else {
