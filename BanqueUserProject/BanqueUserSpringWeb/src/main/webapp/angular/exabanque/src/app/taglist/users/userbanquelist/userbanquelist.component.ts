@@ -20,16 +20,19 @@ export class UserbanquelistComponent implements OnInit {
 
   mapUsers: StringMapEntry[] = [ ];
 
-  userChoose: string = '';
+  @Input('value') userChoose: string = '';
 
   @Input() currentForm: FormGroup;
-  @Input('fieldToChange') fieldToChange: string;
 
   constructor(private usersServices: UsersService) {}
 
   ngOnInit() {
     this.getMapAllUsers();
-
+    
+    let identifierUser = this.currentForm['identifierUser'];
+    if (identifierUser != null){
+        this.userChoose = identifierUser;
+    }
   }
 
   getMapAllUsers() {

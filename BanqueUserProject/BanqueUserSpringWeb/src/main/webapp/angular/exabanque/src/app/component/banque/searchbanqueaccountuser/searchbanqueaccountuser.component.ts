@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 import {ExaAccountOperation} from '../../../services/banque/exaaccountoperation';
 import {SearchAccountOperation} from '../../../services/banque/searchaccountoperationparam';
@@ -33,14 +33,27 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   listAccountOperation: ExaAccountOperation[] = [];
   
   dataSource = new ExabanqueDataSource(this);
-  
 
-  constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef, private router: Router) {
-       this.rForm = fb.group({
-       'identifierUser' : [null, Validators.compose([Validators.required])],
+  initUserCode: string;
+
+  constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef,private parentRoute: ActivatedRoute, private router: Router) {
+      
+      //Init value
+      this.parentRoute.params.subscribe(params => {        
+          this.initUserCode = params['userCodeSelected']; 
+      });
+        
+    
+      this.rForm = fb.group({
+       'identifierUser' : [this.initUserCode, Validators.compose([Validators.required])],
       'beginDate' : [null /*, Validators.compose([Validators.]) */],
       'endDate' : [null /*,  Validators.compose([Validators.required])*/],
     });
+
+    // Initialise the list.
+    if (this.rForm.valid){
+      this.searchaccountoperation(this.rForm.value);   
+    }
    }
 
   ngOnInit() {
@@ -81,8 +94,12 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   } 
   
   openCreditAccount(event) {
-    console.log('event : ' + event);
-    this.router.navigate(['/operation/creditbanqueaccountuser']);
+    let identifierUser = '';
+    if (this.rForm.valid){
+      identifierUser = this.rForm.value.identifierUser;
+    }
+
+    this.router.navigate(['/operation/creditbanqueaccountuser',{userCodeSelected: identifierUser}]);
   }
  }
 

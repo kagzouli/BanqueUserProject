@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from "@angular/router";
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from "@angular/router";
 
 
 import {AccountNumberOperation} from '../../../services/banque/accountnumberoperation';
@@ -19,14 +19,24 @@ export class CreditBanqueAccountUser implements OnInit {
   rForm: FormGroup;
   identifierUserCste = 'identifierUser';
   post: any;
-  constructor(private fb: FormBuilder, private banqueService: BanqueService, private router: Router) {
+  initUserCode: string = '';
+  constructor(private fb: FormBuilder, private banqueService: BanqueService, private parentRoute: ActivatedRoute, private router: Router) {
+ 
+    this.parentRoute.params.subscribe(params => {
+
+         this.initUserCode = params['userCodeSelected']; 
+    });
+
     this.rForm = fb.group({
-      'identifierUser' : [null, Validators.compose([Validators.required])],
+      'identifierUser' : [this.initUserCode, Validators.compose([Validators.required])],
       'labelOperation' : [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(150)])],
       'amount' : [null,  Validators.compose([Validators.required, Validators.pattern('^\\d+\\.?\\d{0,2}$')])]
     });
 
    }
+
+   ngOnInit() {
+  }
 
   /**
    * Credit account for the user specified.
@@ -48,7 +58,7 @@ export class CreditBanqueAccountUser implements OnInit {
              const success = jsonResult.success;
              if (success) {
                 window.alert('The account of the user has been credit with success');
-                this.router.navigate(['/']);               
+                this.router.navigate(['/operation/searchbanqueaccountuser',{userCodeSelected: accountNumberOperation.identifierUser}]);               
               }else {
                 window.alert('The application has face a technical error.');
              }
@@ -65,9 +75,4 @@ export class CreditBanqueAccountUser implements OnInit {
          this.rForm.reset();
      }
   }
-
-  ngOnInit() {
-  }
-
-
 }

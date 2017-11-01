@@ -2,7 +2,7 @@
     <div class="form-container">
       <div class="row columns">
         <h1>User</h1>
-        <app-userbanquelist [currentForm]="rForm"></app-userbanquelist>
+        <app-userbanquelist [currentForm]="rForm" [value]= 'initUserCode'></app-userbanquelist>
         <br/>
 
         <label>Begin date
@@ -60,7 +60,7 @@
 
 <br/>
 <br/>
-<button (click)="openCreditAccount($event)">Credit account</button>
+<button class="button expanded" (click)="openCreditAccount($event)">Credit account</button>
 
 
 
