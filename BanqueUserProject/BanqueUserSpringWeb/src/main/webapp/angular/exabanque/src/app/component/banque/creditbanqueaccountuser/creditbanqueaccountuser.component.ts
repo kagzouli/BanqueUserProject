@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from "@angular/router";
+
 
 import {AccountNumberOperation} from '../../../services/banque/accountnumberoperation';
 import {JsonResult} from '../../../services/jsonresult';
@@ -8,16 +10,16 @@ import {JsonResult} from '../../../services/jsonresult';
 import { BanqueService } from '../../../services/banque/banque.service';
 
 @Component({
-  selector: 'app-poc',
-  templateUrl: './poc.component.html',
-  styleUrls: ['./poc.component.css'],
+  selector: 'creditbanqueaccountuser',
+  templateUrl: './creditbanqueaccountuser.component.html',
+  styleUrls: ['./creditbanqueaccountuser.component.css'],
   providers: [BanqueService]
 })
-export class PocComponent implements OnInit {
+export class CreditBanqueAccountUser implements OnInit {
   rForm: FormGroup;
   identifierUserCste = 'identifierUser';
   post: any;
-  constructor(private fb: FormBuilder, private banqueService: BanqueService) {
+  constructor(private fb: FormBuilder, private banqueService: BanqueService, private router: Router) {
     this.rForm = fb.group({
       'identifierUser' : [null, Validators.compose([Validators.required])],
       'labelOperation' : [null, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(150)])],
@@ -43,12 +45,14 @@ export class PocComponent implements OnInit {
              const success = jsonResult.success;
              if (success) {
                 window.alert('The account of the user has been credit with success');
-             }else {
+                this.router.navigate(['/']);               
+              }else {
                 window.alert('The application has face a technical error.');
              }
 
            }
          );
+         
 
     }else {
          // Invalid data on form - we reset.

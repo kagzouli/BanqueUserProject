@@ -6,25 +6,25 @@ import {MatTableModule} from '@angular/material';
 
 
 import { AppComponent } from './app.component';
-import { PocComponent } from './form/test/poc/poc.component';
+import { CreditBanqueAccountUser } from './component/banque/creditbanqueaccountuser/creditbanqueaccountuser.component';
 import { UserbanquelistComponent } from './taglist/users/userbanquelist/userbanquelist.component';
 import { SearchbanqueaccountuserComponent } from './component/banque/searchbanqueaccountuser/searchbanqueaccountuser.component';
 
+import { AppRoutingModule, routingComponents } from './app.routing';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PocComponent,
     UserbanquelistComponent,
-    SearchbanqueaccountuserComponent,
+    routingComponents 
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatTableModule
-    
+    MatTableModule,
+    AppRoutingModule 
   ],
   providers: [],
   bootstrap: [AppComponent],

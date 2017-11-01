@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PocComponent } from './poc.component';
+import { CreditBanqueAccountUser } from './creditbanqueaccountuser.component';
 
 describe('PocComponent', () => {
-  let component: PocComponent;
-  let fixture: ComponentFixture<PocComponent>;
+  let component: CreditBanqueAccountUser;
+  let fixture: ComponentFixture<CreditBanqueAccountUser>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PocComponent ]
+      declarations: [ CreditBanqueAccountUser ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PocComponent);
+    fixture = TestBed.createComponent(CreditBanqueAccountUser);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

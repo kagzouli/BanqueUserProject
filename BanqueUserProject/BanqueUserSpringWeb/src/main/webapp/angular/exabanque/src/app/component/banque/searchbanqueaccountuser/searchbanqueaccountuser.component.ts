@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from "@angular/router";
 
 import {ExaAccountOperation} from '../../../services/banque/exaaccountoperation';
 import {SearchAccountOperation} from '../../../services/banque/searchaccountoperationparam';
@@ -34,7 +35,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   dataSource = new ExabanqueDataSource(this);
   
 
-  constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef, private router: Router) {
        this.rForm = fb.group({
        'identifierUser' : [null, Validators.compose([Validators.required])],
       'beginDate' : [null /*, Validators.compose([Validators.]) */],
@@ -78,6 +79,11 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          this.rForm.reset();
      }
   } 
+  
+  openCreditAccount(event) {
+    console.log('event : ' + event);
+    this.router.navigate(['/operation/creditbanqueaccountuser']);
+  }
  }
 
 /**
