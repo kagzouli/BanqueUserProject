@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Observable';
-
 import {AccountNumberOperation} from './accountnumberoperation';
 import {ExaAccountOperation} from './exaaccountoperation';
 import {SearchAccountOperation} from './searchaccountoperationparam';
@@ -16,7 +15,12 @@ import { HttpClient , HttpHeaders} from '@angular/common/http';
 @Injectable()
 export class BanqueService {
   
-  contextUserServiceUrl = 'http://localhost:25000';  
+  
+  contextUserServiceUrl = 'http://localhost:14090';
+
+  authorizationstringmanager = 'Basic bWFuYWdlcjpiYU5rbWFOYWdlcjM1Iw==';
+  authorizationstringcollaborator = 'Basic Y29sbGFib3JhdG9yOmNvbGxhQm9SYXRvcjM1Iw==';
+  
 
   constructor( private http: HttpClient) { }
 
@@ -29,8 +33,8 @@ export class BanqueService {
     /*  this.http.get('http://localhost:25000/usersList')
       .map((res: Response) => res.json()).subscribe((data) => console.log(data)); */
 
-     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-     this.http.post<JsonResult>(this.contextUserServiceUrl + '/creditAccount', JSON.stringify(accountNumberOperation), {headers: headers})
+     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8').set('Authorization',this.authorizationstringmanager);
+     this.http.post<JsonResult>(this.contextUserServiceUrl + '/creditAccount', JSON.stringify(accountNumberOperation), {headers: headers, withCredentials: true})
        .subscribe(
         res => {
           callback(res);
@@ -47,8 +51,8 @@ export class BanqueService {
    * 
    */  
    findAllAccountOperation(searchaccountOperationParam: SearchAccountOperation, callback: (listAccountOperations: ExaAccountOperation[]) => void){
-        const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-        this.http.post<ExaAccountOperation[]>(this.contextUserServiceUrl + '/listOperations', searchaccountOperationParam, {headers: headers})
+        const headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization',this.authorizationstringcollaborator);
+        this.http.post<ExaAccountOperation[]>(this.contextUserServiceUrl + '/listOperations', searchaccountOperationParam, {headers: headers , withCredentials: true})
        .subscribe(
         res => {
           callback(res);

@@ -7,6 +7,7 @@ import static com.exakaconsulting.IConstantApplication.DEBIT_ACCOUNT_REST;
 import static com.exakaconsulting.IConstantApplication.LIST_OPERATION_REST;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,6 +37,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+@CrossOrigin(origins="*" , allowedHeaders= "*" , exposedHeaders= {"Access-Control-Allow-Origin"}, methods={RequestMethod.GET , RequestMethod.POST, RequestMethod.PUT , RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RestController
 @Api(value = "/", description = "This REST API is use to make actions on account user.<br/>")
 public class BanqueController {
@@ -56,26 +59,23 @@ public class BanqueController {
 
 	}
 
-	@ApiOperation(value = "This method is to retrieve the list of operations by a user between 2 dates", response = JsonResult.class , notes="JsonResult of AccountOperationBean")
+	@ApiOperation(value = "This method is to retrieve the list of operations by a user between 2 dates", response = List.class , notes="List of AccountOperationBean")
 	@RequestMapping(value = LIST_OPERATION_REST, method = { RequestMethod.POST}, consumes = {
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
 	@PreAuthorize("hasRole('bankmanager') OR hasRole('bankcollaborator')")
-	public JsonResult<List<AccountOperationBean>> listOperations(@ApiParam(value="The account operation", required=true) @RequestBody(required=true) final AccountOperationStateParam accountOperationStateParam) {
+	public List<AccountOperationBean> listOperations(@ApiParam(value="The account operation", required=true) @RequestBody(required=true) final AccountOperationStateParam accountOperationStateParam) {
 		LOGGER.info("BEGIN of the method listOperations of the class " + BanqueController.class.getName()
 				+ "identifierUser : " + accountOperationStateParam.getUserIdentifier() + " , Begin date : "
 				+ accountOperationStateParam.getBeginDate() + " , End Date : "
 				+ accountOperationStateParam.getEndDate());
-
-		JsonResult<List<AccountOperationBean>> jsonResult = new JsonResult<>();
+		List<AccountOperationBean> listOperationAccount = Collections.emptyList();
 		try {
-			List<AccountOperationBean> listOperationAccount = banqueService.retrieveOperations(
+			listOperationAccount = banqueService.retrieveOperations(
 					accountOperationStateParam.getUserIdentifier(), accountOperationStateParam.getBeginDate(),
 					accountOperationStateParam.getEndDate());
-			jsonResult.setResult(listOperationAccount);
-			jsonResult.setSuccess(true);
 		} catch (UserBanqueNotFoundException exception) {
-			jsonResult.addError(exception.getMessage());
+			throw new IllegalArgumentException("The user does not exist");
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
 			throw new TechnicalException(exception);
@@ -85,7 +85,7 @@ public class BanqueController {
 				+ accountOperationStateParam.getBeginDate() + " , End Date : "
 				+ accountOperationStateParam.getEndDate());
 
-		return jsonResult;
+		return listOperationAccount;
 	}
 
 	/**
