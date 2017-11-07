@@ -34,13 +34,13 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   
   dataSource = new ExabanqueDataSource(this);
 
-  initUserCode: string;
+  initUserCode : string;
 
   constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef,private parentRoute: ActivatedRoute, private router: Router) {
       
       //Init value
       this.parentRoute.params.subscribe(params => {        
-          this.initUserCode = params['userCodeSelected']; 
+          this.initUserCode =  params['userCodeSelected'] != null ? params['userCodeSelected'] : ''; 
       });
         
     

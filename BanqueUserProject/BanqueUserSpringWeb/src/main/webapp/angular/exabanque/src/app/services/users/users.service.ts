@@ -10,7 +10,11 @@ import {UserLightBean} from './userlightbean';
 @Injectable()
 export class UsersService {
 
-  contextUserServiceUrl = 'http://localhost:25000';
+  // contextUserServiceUrl = 'http://localhost:25000';
+
+  contextUserServiceUrl = 'http://localhost:12090';
+  
+  authorizationstring = 'Basic YmFucXVlOmJhTnFVZTM1Iw==';
 
   constructor( private http: HttpClient) { }
 
@@ -20,8 +24,8 @@ export class UsersService {
    */
   getAllBanqueUsers(callback: (userLightBean: UserLightBean[]) => void) {
 
-     const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
-     this.http.get<UserLightBean[]>(this.contextUserServiceUrl + '/usersList')
+     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization',this.authorizationstring);
+     this.http.get<UserLightBean[]>(this.contextUserServiceUrl + '/userslist' , {headers: headers, withCredentials: true})
        .subscribe(
         res => {
           callback(res);
