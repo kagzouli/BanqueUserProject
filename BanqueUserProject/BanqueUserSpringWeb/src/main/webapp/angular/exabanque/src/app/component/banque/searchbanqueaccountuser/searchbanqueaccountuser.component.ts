@@ -36,6 +36,8 @@ export class SearchbanqueaccountuserComponent implements OnInit {
 
   initUserCode : string;
 
+  launchAction : boolean = false;
+
   constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef,private parentRoute: ActivatedRoute, private router: Router) {
       
       //Init value
@@ -59,6 +61,10 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   ngOnInit() {
   }
 
+  disableButton(invalidform : boolean){
+    return invalidform || this.launchAction; 
+  }
+
   searchaccountoperation(form) {
     
       // Convert begin date to ISO8601
@@ -77,12 +83,14 @@ export class SearchbanqueaccountuserComponent implements OnInit {
     
         // Call the search accountoperations if valid
       if (this.rForm.valid) {
+         this.launchAction = true;
          // Method of callback to credit account number
          this.banqueService.findAllAccountOperation(searchAccountOperation,
          (listAccountOperation: ExaAccountOperation[]) => {
              this.listAccountOperation = listAccountOperation;
              this.dataSource = new ExabanqueDataSource(this);
              this.changeDetectorRefs.detectChanges();
+             this.launchAction = false;
            }
          );
 
@@ -90,6 +98,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          window.alert('There is a mistake in your input.');
          // Invalid data on form - we reset.
          this.rForm.reset();
+         this.launchAction = false;
      }
   } 
   

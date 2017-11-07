@@ -20,6 +20,8 @@ export class CreditBanqueAccountUser implements OnInit {
   identifierUserCste = 'identifierUser';
   post: any;
   initUserCode: string = '';
+  launchAction: boolean = false;
+
   constructor(private fb: FormBuilder, private banqueService: BanqueService, private parentRoute: ActivatedRoute, private router: Router) {
  
     this.parentRoute.params.subscribe(params => {
@@ -38,6 +40,10 @@ export class CreditBanqueAccountUser implements OnInit {
    ngOnInit() {
   }
 
+  disableButton(invalidform : boolean){
+    return invalidform || this.launchAction; 
+  }
+
   /**
    * Credit account for the user specified.
    *
@@ -53,6 +59,7 @@ export class CreditBanqueAccountUser implements OnInit {
        
         this.rForm.disable();
          // Method of callback to credit account number
+         this.launchAction = true;
          this.banqueService.creditAccountNumber(accountOperation,
          (jsonResult: JsonResult) => {
              const success = jsonResult.success;
@@ -62,12 +69,10 @@ export class CreditBanqueAccountUser implements OnInit {
               }else {
                 window.alert('The application has face a technical error.');
              }
+             this.launchAction = false;
 
            }
          );
-
-         //After finishing enable the form
-         this.rForm.enable();
          
 
     }else {
