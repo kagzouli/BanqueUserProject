@@ -32,7 +32,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
    
   listAccountOperation: ExaAccountOperation[] = [];
   
-  dataSource = new ExabanqueDataSource(this);
+  dataSource = new ExabanqueDataSource(this.listAccountOperation);
 
   initUserCode : string;
 
@@ -88,7 +88,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          this.banqueService.findAllAccountOperation(searchAccountOperation,
          (listAccountOperation: ExaAccountOperation[]) => {
              this.listAccountOperation = listAccountOperation;
-             this.dataSource = new ExabanqueDataSource(this);
+             this.dataSource = new ExabanqueDataSource(this.listAccountOperation);
              this.changeDetectorRefs.detectChanges();
              this.launchAction = false;
            }
@@ -120,14 +120,14 @@ export class SearchbanqueaccountuserComponent implements OnInit {
  */
 export class ExabanqueDataSource extends DataSource<any> {
   
-   constructor(private _searchbanqueaccount: SearchbanqueaccountuserComponent) {
+   constructor(private listAccountOperation: ExaAccountOperation[]) {
     super();
   }
   
   
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<ExaAccountOperation[]> {
-    return Observable.of(this._searchbanqueaccount.listAccountOperation);
+    return Observable.of(this.listAccountOperation);
   }
 
   disconnect() {}
