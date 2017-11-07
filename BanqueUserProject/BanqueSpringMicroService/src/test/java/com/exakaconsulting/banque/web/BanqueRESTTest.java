@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.exakaconsulting.JsonResult;
@@ -47,6 +50,7 @@ import com.exakaconsulting.banque.service.BanqueApplicationTest;
 import com.exakaconsulting.banque.service.BanqueUserBean;
 import com.exakaconsulting.banque.service.UserBanqueNotFoundException;
 import com.exakaconsulting.banque.util.DateUtils;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
@@ -112,12 +116,11 @@ public class BanqueRESTTest {
 			accountOperationParam.setUserIdentifier(IDENTIFIER_USER_TEST);
 			accountOperationParam.setBeginDate(DateUtils.fixDate(2016, 12, 17, 0, 0, 0, 0));
 
-			final JsonResult jsonResult = this.retrieveJsonResultConsumes(LIST_OPERATION_REST, accountOperationParam, POST_REQUEST);
-
-			assertNotNull(jsonResult);
-			assertEquals(jsonResult.isSuccess(), true);
-
-			List<AccountOperationBean> listAccountOperation = (List<AccountOperationBean>) jsonResult.getResult();
+			final String responseContent = this.retrieveResultConsumes(LIST_OPERATION_REST, accountOperationParam, POST_REQUEST);
+			assertNotNull(responseContent);
+			JavaType javaType = mapper.getTypeFactory().constructCollectionType(List.class, AccountOperationBean.class);
+			final List<AccountOperationBean> listAccountOperation = mapper.readValue(responseContent, javaType);
+			
 			assertNotNull(listAccountOperation);
 			assertEquals(listAccountOperation.size(), 4);
 		} catch (Exception exception) {
@@ -365,6 +368,42 @@ public class BanqueRESTTest {
 
 		final JsonResult jsonResult = mapper.readValue(responseContent, JsonResult.class);
 		return jsonResult;
+	}
+	
+	/**
+	 * Method to retrieve jsonResult from the request and initial request object
+	 * 
+	 * @param urlToTest
+	 * @param initialObject
+	 * @return
+	 * @throws Exception
+	 */
+	protected String retrieveResultConsumes(final String urlToTest, final Object initialObject , final String requestType)
+			throws Exception {
+
+		final String json = mapper.writeValueAsString(initialObject);
+
+		MockHttpServletRequestBuilder resultActions = null;
+		switch(requestType){
+			case GET_REQUEST:
+				resultActions = get(urlToTest);
+				break;
+			default:
+				resultActions = post(urlToTest);
+				break;
+		}
+		
+		final MvcResult mvcResult = mockMvc.perform(resultActions.with(httpBasic(BANK_USER_COLLABORATOR,BANK_PASSWORD_COLLABORATOR)).accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON).content(json)).andReturn();
+
+		assertNotNull(mvcResult);
+
+		final MockHttpServletResponse response = mvcResult.getResponse();
+		assertNotNull(response);
+
+		final String responseContent = response.getContentAsString();
+		assertNotNull(responseContent);
+		return responseContent;
 	}
 
 	/**
