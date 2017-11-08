@@ -11,12 +11,14 @@ import { UserbanquelistComponent } from './taglist/users/userbanquelist/userbanq
 import { SearchbanqueaccountuserComponent } from './component/banque/searchbanqueaccountuser/searchbanqueaccountuser.component';
 
 import { AppRoutingModule, routingComponents } from './app.routing';
+import { DebitbanqueaccountuserComponent } from './component/banque/debitbanqueaccountuser/debitbanqueaccountuser.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserbanquelistComponent,
-    routingComponents 
+    routingComponents,
+    DebitbanqueaccountuserComponent 
   ],
   imports: [
     BrowserModule,

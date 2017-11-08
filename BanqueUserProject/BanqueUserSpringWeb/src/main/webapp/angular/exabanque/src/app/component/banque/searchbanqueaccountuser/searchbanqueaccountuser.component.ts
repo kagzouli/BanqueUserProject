@@ -110,6 +110,15 @@ export class SearchbanqueaccountuserComponent implements OnInit {
 
     this.router.navigate(['/operation/creditbanqueaccountuser',{userCodeSelected: identifierUser}]);
   }
+
+  openDebitAccount(event) {
+    let identifierUser = '';
+    if (this.rForm.valid){
+      identifierUser = this.rForm.value.identifierUser;
+    }
+
+    this.router.navigate(['/operation/debitbanqueaccountuser',{userCodeSelected: identifierUser}]);
+  }
  }
 
 /**

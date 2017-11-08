@@ -1,0 +1,22 @@
+<div>
+  <form [formGroup] = "rForm" (ngSubmit)="debitAccountController(rForm.value)">
+    <div class="form-container">
+      <div class="row columns">
+        <h1>Debit account</h1>
+        <app-userbanquelist [currentForm]="rForm" [value]= 'initUserCode'></app-userbanquelist>
+        <br/>
+
+        <label>Label operation
+          <input type="text" formControlName="labelOperation" />
+        </label>
+        <br/>
+        
+         <label>Amount
+          <input type="number"  formControlName="amount"/>
+        </label>
+        <br/>      
+        <input type="submit" class="button expanded" value="Submit Form" [disabled]="disableButton(!rForm.valid)">
+      </div>
+    </div>
+  </form>
+</div>

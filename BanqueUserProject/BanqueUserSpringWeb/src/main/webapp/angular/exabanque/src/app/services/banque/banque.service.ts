@@ -44,7 +44,27 @@ export class BanqueService {
         }
       );
    }
-  
+
+   /**
+   * Method to credit an account for a user.
+   * 
+   */
+  debitAccountNumber(accountNumberOperation: AccountNumberOperation, callback: (jsonResult: JsonResult) => void) {
+    
+        /*  this.http.get('http://localhost:25000/usersList')
+          .map((res: Response) => res.json()).subscribe((data) => console.log(data)); */
+    
+         const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8').set('Authorization',this.authorizationstringmanager);
+         this.http.post<JsonResult>(this.contextUserServiceUrl + '/debitAccount', JSON.stringify(accountNumberOperation), {headers: headers, withCredentials: true})
+           .subscribe(
+            res => {
+              callback(res);
+            },
+            err => {
+              console.log('Error occured --> ' + err);
+            }
+          );
+       }
   
    /**
    * Method to find all account operations.
