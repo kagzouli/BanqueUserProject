@@ -9,7 +9,7 @@ import {SearchAccountOperation} from './searchaccountoperationparam';
 
 
 import {JsonResult} from '../jsonresult';
-import { HttpClient , HttpHeaders} from '@angular/common/http';
+import { HttpClient , HttpHeaders , HttpParams} from '@angular/common/http';
 
 
 @Injectable()
@@ -51,9 +51,6 @@ export class BanqueService {
    */
   debitAccountNumber(accountNumberOperation: AccountNumberOperation, callback: (jsonResult: JsonResult) => void) {
     
-        /*  this.http.get('http://localhost:25000/usersList')
-          .map((res: Response) => res.json()).subscribe((data) => console.log(data)); */
-    
          const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8').set('Authorization',this.authorizationstringmanager);
          this.http.post<JsonResult>(this.contextUserServiceUrl + '/debitAccount', JSON.stringify(accountNumberOperation), {headers: headers, withCredentials: true})
            .subscribe(
@@ -81,6 +78,24 @@ export class BanqueService {
           console.log('Error occured --> ' + err);
         }
       );
+   }
+
+   retrieveBalanceAccountUser(userCodeIdentifier : string, callback: (listAccountOperations: JsonResult) => void) {
+    
+    let params = new HttpParams();
+    params = params.append('userIdentifier', userCodeIdentifier);
+    
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization',this.authorizationstringcollaborator);
+    this.http.get<JsonResult>(this.contextUserServiceUrl + '/balanceAccountUser' , {params: params, headers: headers, withCredentials: true})
+      .subscribe(
+       res => {
+         callback(res);
+       },
+       err => {
+         // TODO : A gerer avec des redirections
+         console.log('Error occured --> ' + err);
+       }
+     );
    }
  
  
