@@ -7,6 +7,7 @@ import {SearchAccountOperation} from '../../../services/banque/searchaccountoper
 
 
 import { BanqueService } from '../../../services/banque/banque.service';
+import {JsonResult} from '../../../services/jsonresult';
 
 import {DataSource} from '@angular/cdk/collections';
 import {MatPaginator} from '@angular/material';
@@ -37,6 +38,8 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   initUserCode : string;
 
   launchAction : boolean = false;
+
+  balanceUser : number;
 
   constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef,private parentRoute: ActivatedRoute, private router: Router) {
       
@@ -89,6 +92,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          (listAccountOperation: ExaAccountOperation[]) => {
              this.listAccountOperation = listAccountOperation;
              this.dataSource = new ExabanqueDataSource(this.listAccountOperation);
+             this.retrieveBalanceUser(form.identifierUser);
              this.changeDetectorRefs.detectChanges();
              this.launchAction = false;
            }
@@ -109,6 +113,16 @@ export class SearchbanqueaccountuserComponent implements OnInit {
     }
 
     this.router.navigate(['/operation/creditbanqueaccountuser',{userCodeSelected: identifierUser}]);
+  }
+
+  retrieveBalanceUser (userIdentifier : string){
+    this.banqueService.retrieveBalanceAccountUser(userIdentifier,
+      (jsonResult : JsonResult) => {
+          if (jsonResult.success){
+             this.balanceUser = jsonResult.result;
+          }
+        }
+      );
   }
 
   openDebitAccount(event) {
