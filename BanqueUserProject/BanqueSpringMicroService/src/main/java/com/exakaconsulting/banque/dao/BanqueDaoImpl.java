@@ -134,6 +134,7 @@ public class BanqueDaoImpl implements IBanqueDao {
 			LOGGER.error(exception.getMessage(), exception);
 			throw new TechnicalException(exception);
 		}
-		return sumAccount;
+		
+		return sumAccount == null ? BIG_DECIMAL_ZERO : sumAccount;
 	}
 }
