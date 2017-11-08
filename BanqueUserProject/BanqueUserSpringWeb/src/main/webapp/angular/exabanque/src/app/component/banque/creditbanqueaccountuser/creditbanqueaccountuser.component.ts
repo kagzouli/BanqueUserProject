@@ -57,7 +57,6 @@ export class CreditBanqueAccountUser implements OnInit {
      if (this.rForm.valid) {
        //Before the credit disable the button.
        
-        this.rForm.disable();
          // Method of callback to credit account number
          this.launchAction = true;
          this.banqueService.creditAccountNumber(accountOperation,
@@ -66,8 +65,11 @@ export class CreditBanqueAccountUser implements OnInit {
              if (success) {
                 window.alert('The account of the user has been credit with success');
                 this.router.navigate(['/operation/searchbanqueaccountuser',{userCodeSelected: accountNumberOperation.identifierUser}]);               
+                
               }else {
-                window.alert('The application has face a technical error.');
+                let messageError = jsonResult.errors[0];
+                window.alert('Error --> ' + messageError);
+                
              }
              this.launchAction = false;
 

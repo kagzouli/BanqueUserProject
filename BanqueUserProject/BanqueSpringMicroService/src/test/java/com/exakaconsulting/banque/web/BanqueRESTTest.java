@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -43,6 +45,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.exakaconsulting.IConstantApplication;
 import com.exakaconsulting.JsonResult;
 import com.exakaconsulting.banque.dao.IBanqueUserDao;
 import com.exakaconsulting.banque.service.AccountOperationBean;
@@ -87,6 +90,11 @@ public class BanqueRESTTest {
 	
 	@Autowired
 	private Filter springSecurityFilterChain;	 
+	
+	@Autowired
+	private MessageSource messageSource;
+	
+	private static final Locale DEFAULT_LOCALE = Locale.FRENCH;
 
 	@Before
 	public void setUp() {
@@ -184,7 +192,7 @@ public class BanqueRESTTest {
 			operationUserParam.setAmount(MAX_AMOUNT_AUTORIZED.add(BigDecimal.valueOf(20)));
 			operationUserParam.setLabelOperation("Credit op test 1");
 
-			this.testFunctionalErrorCode(CREDIT_ACCOUNT_REST, operationUserParam, KEY_MAX_AMOUNT_EXCEPTION, POST_REQUEST);
+			this.testFunctionalErrorCode(CREDIT_ACCOUNT_REST, operationUserParam, messageSource.getMessage(KEY_MAX_AMOUNT_EXCEPTION , new Object[] { IConstantApplication.MAX_AMOUNT_AUTORIZED}, DEFAULT_LOCALE), POST_REQUEST);
 
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
@@ -249,7 +257,7 @@ public class BanqueRESTTest {
 			operationUserParam.setAmount(BigDecimal.valueOf(800));
 			operationUserParam.setLabelOperation("Debit op test 1");
 
-			this.testFunctionalErrorCode(DEBIT_ACCOUNT_REST, operationUserParam, NEGATIVE_BALANCE_AMOUNT_EXCEPTION, POST_REQUEST);
+			this.testFunctionalErrorCode(DEBIT_ACCOUNT_REST, operationUserParam, this.messageSource.getMessage(NEGATIVE_BALANCE_AMOUNT_EXCEPTION , new Object[] {} , DEFAULT_LOCALE), POST_REQUEST);
 
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);

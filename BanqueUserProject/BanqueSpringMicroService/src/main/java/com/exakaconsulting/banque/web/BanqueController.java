@@ -9,11 +9,13 @@ import static com.exakaconsulting.IConstantApplication.LIST_OPERATION_REST;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.exakaconsulting.IConstantApplication;
 import com.exakaconsulting.JsonResult;
 import com.exakaconsulting.banque.service.AccountOperationBean;
 import com.exakaconsulting.banque.service.IBanqueService;
@@ -47,6 +50,11 @@ public class BanqueController {
 	@Autowired
 	@Qualifier(BANQUE_SERVICE)
 	private IBanqueService banqueService;
+	
+	@Autowired
+	private MessageSource messageSource;
+	
+	private static final Locale DEFAULT_LOCALE = Locale.FRANCE;
 	
 	@ApiOperation(value = "This method is use to retrieve the home of the bank", response = ModelAndView.class)
 	@RequestMapping(value = "/banque", method = { RequestMethod.GET })
@@ -111,7 +119,7 @@ public class BanqueController {
 			jsonResult.setSuccess(true);
 		} catch (UserBanqueNotFoundException | MaxAmountCreditException exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(exception.getMessage());
+			jsonResult.addError(messageSource.getMessage(exception.getMessage(), new Object[] {IConstantApplication.MAX_AMOUNT_AUTORIZED} , DEFAULT_LOCALE));
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
 			throw new TechnicalException(exception);
@@ -143,7 +151,7 @@ public class BanqueController {
 			jsonResult.setSuccess(true);
 		} catch (UserBanqueNotFoundException | NegativeBalanceAmountException exception) {
 			LOGGER.error(exception.getMessage(), exception);
-			jsonResult.addError(exception.getMessage());
+			jsonResult.addError(messageSource.getMessage(exception.getMessage(), new Object[] {} , DEFAULT_LOCALE));
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
 			throw new TechnicalException(exception);

@@ -67,7 +67,8 @@ export class DebitbanqueaccountuserComponent implements OnInit {
                     window.alert('The account of the user has been debit with success');
                     this.router.navigate(['/operation/searchbanqueaccountuser',{userCodeSelected: accountNumberOperation.identifierUser}]);               
                   }else {
-                    window.alert('The application has face a technical error.');
+                    let messageError = jsonResult.errors[0];
+                    window.alert('Error --> ' + messageError);
                  }
                  this.launchAction = false;
     
