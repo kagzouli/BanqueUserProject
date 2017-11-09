@@ -12,13 +12,15 @@ import { SearchbanqueaccountuserComponent } from './component/banque/searchbanqu
 
 import { AppRoutingModule, routingComponents } from './app.routing';
 import { DebitbanqueaccountuserComponent } from './component/banque/debitbanqueaccountuser/debitbanqueaccountuser.component';
+import { DisplaycolorbalanceDirective } from './directive/displaycolorbalance.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserbanquelistComponent,
     routingComponents,
-    DebitbanqueaccountuserComponent 
+    DebitbanqueaccountuserComponent,
+    DisplaycolorbalanceDirective 
   ],
   imports: [
     BrowserModule,

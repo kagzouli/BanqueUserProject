@@ -1,7 +1,7 @@
   <form [formGroup] = "rForm" (ngSubmit)="searchaccountoperation(rForm.value)">
     <div class="form-container">
       <div class="row columns">
-        <h1>User =====> Solde {{balanceUser}}</h1>
+        <h1>User ===> Solde <span appDisplaycolorbalance>{{balanceUser}}</span></h1>
         <app-userbanquelist [currentForm]="rForm" [value]= 'initUserCode'></app-userbanquelist>
         <br/>
 
