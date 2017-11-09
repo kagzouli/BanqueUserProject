@@ -63,7 +63,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
+			 
+			 <plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
       				<execution>
@@ -74,14 +75,13 @@
              				<outputDirectory>${basedir}/target/classes/static/</outputDirectory >
               				<resources>
                  			   <resource>
-                      			  <directory>${basedir}/src/main/webapp/angular/exabanque/dist</directory >
+                      			  <directory>${basedir}/src/main/angular/exabanque/dist</directory >
                 			  </resource>
              			   </resources>
           				</configuration>
       				</execution>
 				</executions>
 			</plugin>
-			
 			
 		</plugins>
 	</build>
