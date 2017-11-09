@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -114,7 +115,7 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 		ResponseEntity<JsonResultListExaAccountOperation> responseJson = restTemplate.exchange(LIST_OPERATION_REST,
 				HttpMethod.POST, entity, JsonResultListExaAccountOperation.class);
 
-		if (responseJson == null) {
+		if (responseJson == null || responseJson.getBody() == null) {
 			throw new TechnicalException("response Json null");
 		}
 
@@ -122,7 +123,7 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 
 		this.testUserNotExists(jsonResult);
 
-		return jsonResult.getResult();
+		return jsonResult != null ? jsonResult.getResult() : null;
 	}
 
 	@Override
@@ -139,7 +140,7 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 		ResponseEntity<JsonResultAmount> responseJson = restTemplate.exchange(CREDIT_ACCOUNT_REST, HttpMethod.POST,
 				entity, JsonResultAmount.class);
 
-		if (responseJson == null) {
+		if (responseJson == null || responseJson.getBody() == null) {
 			throw new TechnicalException("response Json null");
 		}
 
@@ -149,7 +150,7 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 		this.testUserNotExists(jsonResult);
 
 		// test max amount reached
-		if (jsonResult == null || !jsonResult.isSuccess()) {
+		if (jsonResult != null && !jsonResult.isSuccess()) {
 			if (jsonResult.getErrors() != null && jsonResult.getErrors().size() > 0) {
 				final String errorCode = (String) jsonResult.getErrors().get(0);
 				if ("banque.maxamount.authorized".equals(errorCode)) {
@@ -177,7 +178,7 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 		ResponseEntity<JsonResultAmount> responseJson = restTemplate.exchange(DEBIT_ACCOUNT_REST, HttpMethod.POST,
 				entity, JsonResultAmount.class);
 
-		if (responseJson == null) {
+		if (responseJson == null  || responseJson.getBody() == null) {
 			throw new TechnicalException("response Json null");
 		}
 
@@ -187,7 +188,7 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 		this.testUserNotExists(jsonResult);
 
 		// test negative balance
-		if (jsonResult == null || !jsonResult.isSuccess()) {
+		if (jsonResult != null && !jsonResult.isSuccess()) {
 			if (jsonResult.getErrors() != null && jsonResult.getErrors().size() > 0) {
 				final String errorCode = (String) jsonResult.getErrors().get(0);
 				if ("banque.negativebalance.amount".equals(errorCode)) {
@@ -198,13 +199,11 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 			}
 		}
 
-		return jsonResult.getResult();
+		return jsonResult != null ? jsonResult.getResult() : null;
 	}
 
 	private void testUserNotExists(final JsonResult jsonResult) throws UserExaBanqueNotFoundException {
-		if (jsonResult == null || !jsonResult.isSuccess()) {
-
-			if (jsonResult.getErrors() != null && jsonResult.getErrors().size() > 0) {
+		if (jsonResult != null && !jsonResult.isSuccess() && CollectionUtils.isNotEmpty(jsonResult.getErrors())) {
 				final String errorCode = (String) jsonResult.getErrors().get(0);
 				if ("banque.user.notfound".equals(errorCode)) {
 					throw new UserExaBanqueNotFoundException(USER_NOT_FOUND_ERROR);
@@ -213,7 +212,6 @@ public class ExabanqueServiceImpl implements IExabanqueService {
 				throw new TechnicalException("technical error");
 			}
 
-		}
 	}
 
 	/**
