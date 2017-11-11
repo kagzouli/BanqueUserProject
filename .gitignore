@@ -27,6 +27,7 @@
 target/
 .recommenders/
 .metadata/
+node_modules/
 
 # Logs and databases #
 
