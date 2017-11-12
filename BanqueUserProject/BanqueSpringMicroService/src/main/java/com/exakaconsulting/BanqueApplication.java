@@ -15,6 +15,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -46,13 +47,11 @@ public class BanqueApplication {
 
 	@Bean
 	public TomcatServletWebServerFactory tomcatFactory() {
-	    return new TomcatServletWebServerFactory() {
-	        /* @Override
-	        protected TomcatEmbeddedServletContainer getTomcatEmbeddedServletContainer(
-	                Tomcat tomcat) {
-	            tomcat.enableNaming();
-	            return super.getTomcatEmbeddedServletContainer(tomcat);
-	        }*/
+	    return new TomcatServletWebServerFactory() {	    	
+	    	protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) {
+	    		tomcat.enableNaming();
+	    		return super.getTomcatWebServer(tomcat);
+	    	}
 	        
 		    @Override
 		    protected void configureContext(Context context, ServletContextInitializer[] initializers) {
