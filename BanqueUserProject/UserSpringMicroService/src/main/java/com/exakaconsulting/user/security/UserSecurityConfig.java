@@ -1,23 +1,32 @@
 package com.exakaconsulting.user.security;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.User.UserBuilder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Bean
+	InMemoryUserDetailsManager userDetailsManager() {
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("administrator").password("adMinisTrator35#").roles("useradministrator")
-				.and().withUser("banque").password("baNqUe35#").roles("userbank");
+		UserBuilder builder = User.withDefaultPasswordEncoder();
+
+		UserDetails administrator = builder.username("administrator").password("adMinisTrator35#").roles("useradministrator").build();
+		UserDetails banque = builder.username("banque").password("baNqUe35#").roles("userbank").build();
+
+		return new InMemoryUserDetailsManager(administrator, banque);
 	}
 	
 	@Override
