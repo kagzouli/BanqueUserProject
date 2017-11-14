@@ -7,7 +7,6 @@ import static com.exakaconsulting.IConstantApplication.TRANSACTIONAL_BANQUE_BEAN
 import javax.sql.DataSource;
 
 import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.ContextResource;
 import org.springframework.beans.factory.annotation.Qualifier;
