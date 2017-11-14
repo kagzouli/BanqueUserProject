@@ -5,7 +5,7 @@ import {$WebSocket, WebSocketSendMode} from 'angular2-websocket/angular2-websock
 @Injectable()
 export class DisplaydateService {
 
-  contextBanqueServiceUrl = 'http://localhost:14090';
+  contextBanqueServiceUrl = 'ws://localhost:14090';
   
   socket : $WebSocket =  new $WebSocket(this.contextBanqueServiceUrl + '/sendDateToDisplay');
   
