@@ -46,7 +46,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.exakaconsulting.IConstantApplication;
-import com.exakaconsulting.JsonResult;
+import com.exakaconsulting.banque.service.JsonResult;
 import com.exakaconsulting.banque.dao.IBanqueUserDao;
 import com.exakaconsulting.banque.service.AccountOperationBean;
 import com.exakaconsulting.banque.service.BanqueApplicationTest;

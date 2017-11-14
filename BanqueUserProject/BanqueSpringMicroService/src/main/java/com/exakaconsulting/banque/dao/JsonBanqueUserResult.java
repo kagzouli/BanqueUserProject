@@ -1,6 +1,6 @@
 package com.exakaconsulting.banque.dao;
 
-import com.exakaconsulting.JsonResult;
+import com.exakaconsulting.banque.service.JsonResult;
 import com.exakaconsulting.banque.service.BanqueUserBean;
 
 public class JsonBanqueUserResult extends JsonResult<BanqueUserBean>{

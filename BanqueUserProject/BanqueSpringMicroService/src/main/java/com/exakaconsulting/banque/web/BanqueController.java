@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.exakaconsulting.IConstantApplication;
-import com.exakaconsulting.JsonResult;
+import com.exakaconsulting.banque.service.JsonResult;
 import com.exakaconsulting.banque.service.AccountOperationBean;
 import com.exakaconsulting.banque.service.IBanqueService;
 import com.exakaconsulting.banque.service.MaxAmountCreditException;

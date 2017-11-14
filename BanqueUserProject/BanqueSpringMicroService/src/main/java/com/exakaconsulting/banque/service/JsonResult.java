@@ -1,4 +1,4 @@
-package com.exakaconsulting;
+package com.exakaconsulting.banque.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
