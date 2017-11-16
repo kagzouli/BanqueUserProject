@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from "@angular/router";
+import {$WebSocket, WebSocketSendMode } from 'angular2-websocket/angular2-websocket';
+
 
 import {ExaAccountOperation} from '../../../services/banque/exaaccountoperation';
 import {SearchAccountOperation} from '../../../services/banque/searchaccountoperationparam';
 
 
 import { BanqueService } from '../../../services/banque/banque.service';
-import { DisplaydateService } from '../../../services/displaydate/displaydate.service';
 
 import {JsonResult} from '../../../services/jsonresult';
 
@@ -25,7 +26,7 @@ import 'rxjs/add/operator/map';
   selector: 'app-searchbanqueaccountuser',
   templateUrl: './searchbanqueaccountuser.component.html',
   styleUrls: ['./searchbanqueaccountuser.component.css'],
-  providers: [BanqueService, DisplaydateService]
+  providers: [BanqueService]
 })
 export class SearchbanqueaccountuserComponent implements OnInit {
 
@@ -43,7 +44,11 @@ export class SearchbanqueaccountuserComponent implements OnInit {
 
   balanceUser : number;
 
-  constructor(private fb: FormBuilder, private banqueService: BanqueService, private displayDateService : DisplaydateService, private changeDetectorRefs: ChangeDetectorRef,private parentRoute: ActivatedRoute, private router: Router) {
+  socket : $WebSocket =  new $WebSocket('ws://localhost:14090/sendDateToDisplay/websocket');
+  
+  messageDisplay : string = '';
+
+  constructor(private fb: FormBuilder, private banqueService: BanqueService, private changeDetectorRefs: ChangeDetectorRef,private parentRoute: ActivatedRoute, private router: Router) {
       
       //Init value
       this.parentRoute.params.subscribe(params => {        
@@ -68,7 +73,20 @@ export class SearchbanqueaccountuserComponent implements OnInit {
     */
   ngOnInit() {
 
-     this.displayDateService.connect();
+     this.socket.getDataStream().subscribe(
+      (msg)=> {
+       console.log("next", msg.data);
+       this.messageDisplay = msg.data;
+    },
+    (msg)=> {
+        console.log("error", msg);
+    },
+    ()=> {
+        console.log("complete");
+    }
+    );
+
+    
 
   }
 
@@ -77,7 +95,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
    * 
    */
   ngOnDestroy(){
-    this.displayDateService.disconnect();
+   // this.socket.close(true);    // close immediately
   }
 
   disableButton(invalidform : boolean){

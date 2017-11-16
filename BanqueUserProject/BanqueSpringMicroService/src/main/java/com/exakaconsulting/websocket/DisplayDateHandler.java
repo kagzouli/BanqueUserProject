@@ -1,7 +1,6 @@
 package com.exakaconsulting.websocket;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,18 +19,15 @@ public class DisplayDateHandler extends TextWebSocketHandler {
     WebSocketSession session;
 
     // This will send only to one client(most recently connected)
-    public void sendDateToDisplay(Date date) {
+    public void sendMessageToDisplay(final String message) {
         if (session != null && session.isOpen()) {
             try {
-            	SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssz" );
-            	final String valueDate = df.format(date);
-            	LOGGER.info("Value date : " + valueDate);
-                session.sendMessage(new TextMessage("{\"value\": \"" + valueDate + "\"}"));
+                session.sendMessage(new TextMessage(message));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Don't have open session to send:" + date);
+            System.out.println("Don't have open session to send:" + message);
         }
     }
 

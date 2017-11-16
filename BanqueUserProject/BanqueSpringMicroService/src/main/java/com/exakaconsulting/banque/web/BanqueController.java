@@ -35,6 +35,7 @@ import com.exakaconsulting.banque.service.MaxAmountCreditException;
 import com.exakaconsulting.banque.service.NegativeBalanceAmountException;
 import com.exakaconsulting.banque.service.UserBanqueNotFoundException;
 import com.exakaconsulting.exception.TechnicalException;
+import com.exakaconsulting.websocket.DisplayDateHandler;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,6 +51,10 @@ public class BanqueController {
 	@Autowired
 	@Qualifier(BANQUE_SERVICE)
 	private IBanqueService banqueService;
+	
+	@Autowired
+	private DisplayDateHandler displayDateHandler;
+
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -82,6 +87,8 @@ public class BanqueController {
 			listOperationAccount = banqueService.retrieveOperations(
 					accountOperationStateParam.getUserIdentifier(), accountOperationStateParam.getBeginDate(),
 					accountOperationStateParam.getEndDate());
+			
+			this.displayDateHandler.sendMessageToDisplay("Search done");
 		} catch (UserBanqueNotFoundException exception) {
 			throw new IllegalArgumentException("The user does not exist");
 		} catch (Exception exception) {

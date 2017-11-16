@@ -1,5 +1,6 @@
 package com.exakaconsulting.websocket;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,10 @@ public class DisplayDateService {
 	@Autowired
 	private DisplayDateHandler displayDateHandler;
 
-	@Scheduled(fixedDelay = 5000)
+	@Scheduled(fixedDelay = 10000)
 	public void sendCounterUpdate() {
-		displayDateHandler.sendDateToDisplay(new Date());
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		displayDateHandler.sendMessageToDisplay(dateFormat.format(new Date()));
 	}
 
 }
