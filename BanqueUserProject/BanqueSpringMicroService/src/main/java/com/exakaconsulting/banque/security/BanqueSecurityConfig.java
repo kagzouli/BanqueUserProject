@@ -41,6 +41,7 @@ public class BanqueSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		// We must use normally a filter instead of a BASIC Authentication for a websocket request.
 		.antMatchers("/sendDateToDisplay").permitAll()
+		.antMatchers("/sendDateToDisplay/*").permitAll()
 		.anyRequest().authenticated().and().httpBasic();
 		http.csrf().disable();
 		http.cors();

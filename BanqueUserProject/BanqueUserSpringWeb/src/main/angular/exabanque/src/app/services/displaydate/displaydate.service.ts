@@ -7,7 +7,7 @@ export class DisplaydateService {
 
   contextBanqueServiceUrl = 'ws://localhost:14090';
   
-  socket : $WebSocket =  new $WebSocket(this.contextBanqueServiceUrl + '/sendDateToDisplay');
+  socket : $WebSocket =  new $WebSocket(this.contextBanqueServiceUrl + '/sendDateToDisplay/websocket');
   
   
 
