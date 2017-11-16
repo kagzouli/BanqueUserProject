@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import {$WebSocket, WebSocketSendMode} from 'angular2-websocket/angular2-websocket';
+import {$WebSocket, WebSocketSendMode } from 'angular2-websocket/angular2-websocket';
 
 @Injectable()
-export class DisplaydateService {
+export class DisplaydateService {   
 
   contextBanqueServiceUrl = 'ws://localhost:14090';
   

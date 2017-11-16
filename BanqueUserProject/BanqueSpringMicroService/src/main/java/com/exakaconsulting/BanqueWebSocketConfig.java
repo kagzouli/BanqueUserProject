@@ -19,7 +19,7 @@ public class BanqueWebSocketConfig  implements WebSocketConfigurer {
 	/** Register web socket **/
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(displayDateHandler, "/sendDateToDisplay").setAllowedOrigins("http://mydomain.com").withSockJS();
+		registry.addHandler(displayDateHandler, "/sendDateToDisplay").setAllowedOrigins("*").withSockJS();
 
 	}
 
