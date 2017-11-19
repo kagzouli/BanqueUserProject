@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.h2.Driver;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.hystrix.HystrixAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,7 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan("com.exakaconsulting.user.*")
-@SpringBootApplication
+@SpringBootApplication(exclude={HystrixAutoConfiguration.class})
 public class UserApplicationTest {
 
 

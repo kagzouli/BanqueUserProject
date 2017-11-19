@@ -30,6 +30,11 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-web</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.netflix.hystrix</groupId>
+					<artifactId>hystrix-core</artifactId>
+				</exclusion>
+				
 			</exclusions>
 		</dependency>
 		<dependency>

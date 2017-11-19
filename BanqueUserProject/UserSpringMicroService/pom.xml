@@ -26,6 +26,10 @@
 					<groupId>stax</groupId>
 					<artifactId>stax-api</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.netflix.hystrix</groupId>
+					<artifactId>hystrix-core</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
