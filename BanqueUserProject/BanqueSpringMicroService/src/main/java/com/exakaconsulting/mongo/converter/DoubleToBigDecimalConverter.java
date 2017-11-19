@@ -8,7 +8,8 @@ public class DoubleToBigDecimalConverter implements Converter<Double, BigDecimal
  
     @Override
     public BigDecimal convert(Double source) {
-        return new BigDecimal(source);
+    	BigDecimal value = new BigDecimal(source);
+        return value;
     }
 
 }

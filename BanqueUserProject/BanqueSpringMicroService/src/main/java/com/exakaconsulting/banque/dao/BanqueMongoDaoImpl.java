@@ -86,6 +86,7 @@ public class BanqueMongoDaoImpl implements IBanqueDao{
 		
 		if (listOperAccountRepCount != null && listOperAccountRepCount.size() >= 1){
 			total = listOperAccountRepCount.get(0).getTotal();
+			total = total.setScale(2, BigDecimal.ROUND_UP);
 		}
 		
 		return total;
