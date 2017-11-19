@@ -48,4 +48,7 @@ public interface IConstantApplication {
 
 	/** REST balance user  */
 	public static final String BALANCE_USER_REST = "/balanceAccountUser";
+	
+	/** Operation account for mongo db **/
+	public static final String COLLECTIONS_OPERATION_ACCOUNT = "operationcompte";
 }

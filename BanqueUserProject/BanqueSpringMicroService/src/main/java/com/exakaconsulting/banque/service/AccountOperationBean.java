@@ -4,8 +4,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.exakaconsulting.IConstantApplication;
+
 import io.swagger.annotations.ApiModelProperty;
 
+@Document(collection = IConstantApplication.COLLECTIONS_OPERATION_ACCOUNT)
 public class AccountOperationBean implements Serializable{
 
 	/**

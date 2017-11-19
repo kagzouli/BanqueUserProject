@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -27,6 +28,7 @@ import com.exakaconsulting.banque.service.AccountOperationBean;
 import com.exakaconsulting.exception.TechnicalException;
 
 @Repository
+@Profile("!mongo")
 public class BanqueDaoImpl implements IBanqueDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BanqueDaoImpl.class);
