@@ -72,8 +72,8 @@ public class BanqueMongoDaoImpl implements IBanqueDao{
 	public BigDecimal retrieveSumAmountOperTypeByIdentifierUser(String userIdentifier, String operationType) {
 		
 		Criteria criteria = Criteria.where("userIdentifier").is(userIdentifier).andOperator(Criteria.where("operationType").is(operationType));
-		Aggregation aggregation = newAggregation(match(criteria), group("userIdentifier", "operationType").sum("amount").as("sumAmount"),
-				sort(Sort.Direction.DESC,previousOperation(),"sumAmount"));
+		Aggregation aggregation = newAggregation(match(criteria), group("userIdentifier", "operationType").sum("amount").as("total"),
+				sort(Sort.Direction.DESC,previousOperation(),"total"));
 
 
 		AggregationResults<OperAccountRepCount> groupResults = mongoTemplate.aggregate(
@@ -85,7 +85,8 @@ public class BanqueMongoDaoImpl implements IBanqueDao{
 		BigDecimal total = BigDecimal.ZERO;
 		
 		if (listOperAccountRepCount != null && listOperAccountRepCount.size() >= 1){
-			total = new BigDecimal(listOperAccountRepCount.get(0).getTotal());
+			final double sumAmount = listOperAccountRepCount.get(0).getTotal();
+			total = new BigDecimal(sumAmount) ;
 		}
 		
 		return total;

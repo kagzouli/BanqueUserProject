@@ -13,7 +13,7 @@ public class OperAccountRepCount implements Serializable{
 	
 	private String operationType;
 	
-	private long total;
+	private double total;
 
 	public String getUserIdentifier() {
 		return userIdentifier;
@@ -31,14 +31,13 @@ public class OperAccountRepCount implements Serializable{
 		this.operationType = operationType;
 	}
 
-	public long getTotal() {
+	public double getTotal() {
 		return total;
 	}
 
-	public void setTotal(long total) {
+	public void setTotal(double total) {
 		this.total = total;
 	}
-	
-	
+
 
 }
