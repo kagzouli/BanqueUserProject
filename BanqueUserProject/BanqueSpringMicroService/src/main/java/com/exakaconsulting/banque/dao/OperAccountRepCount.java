@@ -1,6 +1,7 @@
 package com.exakaconsulting.banque.dao;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class OperAccountRepCount implements Serializable{
 
@@ -13,7 +14,7 @@ public class OperAccountRepCount implements Serializable{
 	
 	private String operationType;
 	
-	private double total;
+	private BigDecimal total;
 
 	public String getUserIdentifier() {
 		return userIdentifier;
@@ -31,11 +32,11 @@ public class OperAccountRepCount implements Serializable{
 		this.operationType = operationType;
 	}
 
-	public double getTotal() {
+	public BigDecimal getTotal() {
 		return total;
 	}
 
-	public void setTotal(double total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
 
