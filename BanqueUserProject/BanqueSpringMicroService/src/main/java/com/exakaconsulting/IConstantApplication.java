@@ -32,23 +32,27 @@ public interface IConstantApplication {
 	static final String REST_TEMPLATE_BEAN = "RestTemplateBean";
 	
 	/** Credit operation type **/
-	public static final String CREDIT_OPERATION_TYPE = "CRED";
+	static final String CREDIT_OPERATION_TYPE = "CRED";
 	
 	/** Debit operation type  **/
-	public static final String DEBIT_OPERATION_TYPE = "DEBI";
+	static final String DEBIT_OPERATION_TYPE = "DEBI";
 	
 	/** REST list operations **/
-	public static final String LIST_OPERATION_REST = "/listOperations";
+	static final String LIST_OPERATION_REST = "/listOperations";
 	
 	/** REST credit account user **/
-	public static final String CREDIT_ACCOUNT_REST = "/creditAccount";
+	static final String CREDIT_ACCOUNT_REST = "/creditAccount";
 	
 	/** REST debit account user  */
-	public static final String DEBIT_ACCOUNT_REST = "/debitAccount";
+	static final String DEBIT_ACCOUNT_REST = "/debitAccount";
 
 	/** REST balance user  */
-	public static final String BALANCE_USER_REST = "/balanceAccountUser";
+	static final String BALANCE_USER_REST = "/balanceAccountUser";
 	
 	/** Operation account for mongo db **/
-	public static final String COLLECTIONS_OPERATION_ACCOUNT = "operationcompte";
+	static final String COLLECTIONS_OPERATION_ACCOUNT = "operationcompte";
+	
+	/** Profile mongo**/
+	static final String MONGO_PROFILE   = "mongo";
+	
 }

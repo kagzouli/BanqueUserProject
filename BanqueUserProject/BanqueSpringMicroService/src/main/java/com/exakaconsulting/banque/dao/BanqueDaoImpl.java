@@ -1,6 +1,8 @@
 package com.exakaconsulting.banque.dao;
 
 import static com.exakaconsulting.IConstantApplication.BIG_DECIMAL_ZERO;
+import static com.exakaconsulting.IConstantApplication.MONGO_PROFILE;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ import com.exakaconsulting.banque.service.AccountOperationBean;
 import com.exakaconsulting.exception.TechnicalException;
 
 @Repository
-@Profile("!mongo")
+@Profile("!"+ MONGO_PROFILE)
 public class BanqueDaoImpl implements IBanqueDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BanqueDaoImpl.class);

@@ -2,6 +2,9 @@ package com.exakaconsulting;
 
 import java.util.Arrays;
 
+import static com.exakaconsulting.IConstantApplication.MONGO_PROFILE;
+
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +18,7 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
 @Configuration
-@Profile("mongo")
+@Profile(MONGO_PROFILE)
 public class BanqueMongoConfiguration {
 	
 	private static final String DATABASE_NAME = "banqueuserdb";
@@ -24,10 +27,12 @@ public class BanqueMongoConfiguration {
     public MongoDbFactory mongoDbFactory() throws Exception {
 		
 		ServerAddress serverAddress = new ServerAddress("localhost", 27017);
-		MongoCredential userCredentials = MongoCredential.createCredential("", DATABASE_NAME,new char[]{});
+		
+		//MongoCredential userCredentials = MongoCredential.createCredential("", DATABASE_NAME,new char[]{});
         
-        MongoClient mongoClient = new MongoClient(serverAddress, Arrays.asList(userCredentials));
-        return new SimpleMongoDbFactory(mongoClient, DATABASE_NAME);
+       // MongoClient mongoClient = new MongoClient(serverAddress, Arrays.asList(userCredentials));
+	    MongoClient mongoClient = new MongoClient(serverAddress, Arrays.asList());
+		return new SimpleMongoDbFactory(mongoClient, DATABASE_NAME);
     }
 	
     @Bean

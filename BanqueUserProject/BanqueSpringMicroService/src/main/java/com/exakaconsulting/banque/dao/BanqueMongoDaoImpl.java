@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 import com.exakaconsulting.banque.service.AccountOperationBean;
 
 @Repository
-@Profile("mongo")
+@Profile(MONGO_PROFILE)
 public class BanqueMongoDaoImpl implements IBanqueDao{
 		
 	@Autowired

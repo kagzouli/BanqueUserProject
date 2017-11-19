@@ -1,10 +1,7 @@
 package com.exakaconsulting;
 
-import static com.exakaconsulting.IConstantApplication.BANQUE_DATASOURCE_BEAN;
 import static com.exakaconsulting.IConstantApplication.REST_TEMPLATE_BEAN;
-import static com.exakaconsulting.IConstantApplication.TRANSACTIONAL_BANQUE_BEAN;
 
-import javax.sql.DataSource;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
@@ -16,15 +13,10 @@ import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -38,8 +30,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableEurekaClient
 @EnableSwagger2
 public class BanqueConfig{
-
-	private static final String JNDI_BANQUE_DATASOURCE = "jndi/banqueDatasource";
+	public static final String JNDI_BANQUE_DATASOURCE = "jndi/banqueDatasource";
 
 	@Bean
 	public TomcatServletWebServerFactory tomcatFactory() {
@@ -70,19 +61,7 @@ public class BanqueConfig{
 		};
 
 	}
-
-	@Bean(BANQUE_DATASOURCE_BEAN)
-	@Primary
-	public DataSource banqueDatasource() {
-		JndiDataSourceLookup jndiBanqueDatasourceLookup = new JndiDataSourceLookup();
-		return jndiBanqueDatasourceLookup.getDataSource("java:comp/env/" + JNDI_BANQUE_DATASOURCE);
-	}
-
-	@Bean(TRANSACTIONAL_BANQUE_BEAN)
-	public PlatformTransactionManager transactionBanqueBean(final ApplicationContext appContext) {
-		return new DataSourceTransactionManager(appContext.getBean(BANQUE_DATASOURCE_BEAN, DataSource.class));
-	}
-
+	
 	@Bean
 	@LoadBalanced
 	@Qualifier(REST_TEMPLATE_BEAN)
