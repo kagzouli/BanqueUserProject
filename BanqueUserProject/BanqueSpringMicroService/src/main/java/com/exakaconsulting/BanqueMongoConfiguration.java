@@ -2,8 +2,11 @@ package com.exakaconsulting;
 
 import java.util.Arrays;
 
-import static com.exakaconsulting.IConstantApplication.MONGO_PROFILE;
+import javax.sql.DataSource;
 
+import static com.exakaconsulting.IConstantApplication.BANQUE_DATASOURCE_BEAN;
+import static com.exakaconsulting.IConstantApplication.MONGO_PROFILE;
+import static com.exakaconsulting.IConstantApplication.TRANSACTIONAL_BANQUE_BEAN;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +15,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
+import org.springframework.integration.transaction.PseudoTransactionManager;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -40,5 +46,11 @@ public class BanqueMongoConfiguration {
         MongoTemplate mongoTemplate = new MongoTemplate(context.getBean(MongoDbFactory.class));
         return mongoTemplate;
     }
+    
+	@Bean(TRANSACTIONAL_BANQUE_BEAN)
+	public PlatformTransactionManager transactionBanqueBean(final ApplicationContext appContext) {
+		return new PseudoTransactionManager();
+	}
+
 
 }
