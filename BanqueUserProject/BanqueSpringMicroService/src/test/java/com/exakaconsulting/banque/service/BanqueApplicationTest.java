@@ -22,9 +22,11 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 
+import com.exakaconsulting.websocket.DisplayDateHandler;
+
 @Configuration
 @EnableAutoConfiguration
-@ComponentScan("com.exakaconsulting.banque.*")
+@ComponentScan({"com.exakaconsulting.banque.*" , "com.exakaconsulting.websocket.*"})
 @SpringBootApplication
 @EnableEurekaClient
 public class BanqueApplicationTest {
@@ -51,6 +53,11 @@ public class BanqueApplicationTest {
 	@Qualifier(REST_TEMPLATE_BEAN)
 	public RestTemplate restTemplate(){
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public DisplayDateHandler displayDateHandler(){
+		return new DisplayDateHandler();
 	}
 
 
