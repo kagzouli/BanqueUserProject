@@ -113,6 +113,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
     
       if (form.endDate != null){
         endDateIso8601 =  new Date(new Date(form.endDate).toISOString());
+        endDateIso8601.setHours(23 , 59 , 59 , 59);
       }
        
     

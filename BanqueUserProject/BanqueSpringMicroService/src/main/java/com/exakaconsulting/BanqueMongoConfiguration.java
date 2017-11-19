@@ -1,12 +1,9 @@
 package com.exakaconsulting;
 
-import java.util.Arrays;
-
-import javax.sql.DataSource;
-
-import static com.exakaconsulting.IConstantApplication.BANQUE_DATASOURCE_BEAN;
 import static com.exakaconsulting.IConstantApplication.MONGO_PROFILE;
 import static com.exakaconsulting.IConstantApplication.TRANSACTIONAL_BANQUE_BEAN;
+
+import java.util.Arrays;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +13,9 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.integration.transaction.PseudoTransactionManager;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
 @Configuration

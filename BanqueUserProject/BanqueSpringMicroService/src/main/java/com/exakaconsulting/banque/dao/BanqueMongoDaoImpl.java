@@ -1,6 +1,7 @@
 package com.exakaconsulting.banque.dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,15 +44,22 @@ public class BanqueMongoDaoImpl implements IBanqueDao{
 	public List<AccountOperationBean> retrieveOperations(String userIdentifier, Date beginDate, Date endDate) {
 		
 		Criteria criteria = Criteria.where("userIdentifier").is(userIdentifier);
-		
+
+		List<Criteria> listCriteriaDate = new ArrayList<>();
+
 		// Test on begin date
 		if (beginDate != null){
-			criteria =  criteria.andOperator(Criteria.where("operationDate").gte(beginDate));
+			listCriteriaDate.add(Criteria.where("operationDate").gte(beginDate));
 		}
 		
 		// Test on end date
 		if (endDate != null){
-			criteria = criteria.andOperator(Criteria.where("operationDate").lte(endDate));
+			listCriteriaDate.add(Criteria.where("operationDate").lte(endDate));
+		}
+		
+		// Criteria for begin and end date
+		if (listCriteriaDate != null && !listCriteriaDate.isEmpty()){
+			criteria.andOperator(listCriteriaDate.toArray(new Criteria[listCriteriaDate.size()]));			
 		}
 		
 		Query query = new Query(criteria);
