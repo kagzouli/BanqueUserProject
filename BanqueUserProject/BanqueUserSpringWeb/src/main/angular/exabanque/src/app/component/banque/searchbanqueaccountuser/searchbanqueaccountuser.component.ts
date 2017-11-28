@@ -127,7 +127,6 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          (listAccountOperation: ExaAccountOperation[]) => {
              this.dataSource.updateValue(listAccountOperation);
              this.retrieveBalanceUser(form.identifierUser);
-             this.changeDetectorRefs.detectChanges();
              this.launchAction = false;
            }
          );
