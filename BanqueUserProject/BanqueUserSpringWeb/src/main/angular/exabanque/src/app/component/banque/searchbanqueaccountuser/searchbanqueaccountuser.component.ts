@@ -12,7 +12,9 @@ import { BanqueService } from '../../../services/banque/banque.service';
 
 import {JsonResult} from '../../../services/jsonresult';
 
-import {DataSource} from '@angular/cdk/collections';
+import {ExabanqueDataSource} from '../../../datasource/exabanquedatasource';
+
+
 import {MatPaginator} from '@angular/material';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
@@ -33,10 +35,8 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   rForm: FormGroup;
   
   displayedColumns = ['operationDate', 'label', 'operationType', 'amount'];
-   
-  listAccountOperation: ExaAccountOperation[] = [];
-  
-  dataSource = new ExabanqueDataSource(this.listAccountOperation);
+     
+  dataSource = new ExabanqueDataSource();
 
   initUserCode : string;
 
@@ -125,8 +125,7 @@ export class SearchbanqueaccountuserComponent implements OnInit {
          // Method of callback to credit account number
          this.banqueService.findAllAccountOperation(searchAccountOperation,
          (listAccountOperation: ExaAccountOperation[]) => {
-             this.listAccountOperation = listAccountOperation;
-             this.dataSource = new ExabanqueDataSource(this.listAccountOperation);
+             this.dataSource.updateValue(listAccountOperation);
              this.retrieveBalanceUser(form.identifierUser);
              this.changeDetectorRefs.detectChanges();
              this.launchAction = false;
@@ -170,23 +169,3 @@ export class SearchbanqueaccountuserComponent implements OnInit {
   }
  }
 
-/**
- * Data source to provide what data should be rendered in the table. The observable provided
- * in connect should emit exactly the data that should be rendered by the table. If the data is
- * altered, the observable should emit that new set of data on the stream. In our case here,
- * we return a stream that contains only one set of data that doesn't change.
- */
-export class ExabanqueDataSource extends DataSource<any> {
-  
-   constructor(private listAccountOperation: ExaAccountOperation[]) {
-    super();
-  }
-  
-  
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<ExaAccountOperation[]> {
-    return Observable.of(this.listAccountOperation);
-  }
-
-  disconnect() {}
-}
